@@ -143,7 +143,6 @@
     "platforms": [
       "win32",
       "darwin"
-      
     ],
     "arches": [
       "x64",

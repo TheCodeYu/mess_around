@@ -1,122 +1,119 @@
-import { app, BrowserWindow } from 'electron'
-import '../renderer/store'
+import { app, BrowserWindow, globalShortcut } from 'electron'
+import { Constants } from './common/utils'
+import { autoUpdate } from './common/autoUpdate'
+import Strore from 'electron-store'
+import init from './common/common'
+import pkg from '../../package.json'
+import createTray from './common/tray'
+Strore.initRenderer()
 
- 
- const nodeAbi = require('node-abi');
- console.log(nodeAbi.getAbi('14.0.1','node'))// 89
-    console.log(nodeAbi.getAbi('14.0.1','electron'))// 89
-  console.log(nodeAbi.getTarget())//5.0.0
-  console.log(nodeAbi.getTarget())//5.0.0
-  const ioHook = require('iohook');
-    ioHook.start(false);
-    const eventHandler =function(type){
-        switch (type) {
-            case 'mouseclick':
-                console.log('mouse is click!')
-                break;
-            case 'mousedown':
-                console.log('mouse is press!')
-                break;
-            case 'mouseup':
-                console.log('mouse is release!')
-                break;
-            case 'mousedrag':
-                console.log('mouse is moving!')
-                break;
-            case 'mousedrag':
-                console.log('mouse is moving!')
-                break;
-            case 'mousewheel':
-                console.log('keybord is rolling!')
-                break;
-            case 'keydown':
-                console.log('keybord is press!')
-                break;
-            default:
-                console.log('move mouse or keyboard try it!')
-                break;
-        }
-    }
-    ioHook.start(false);
-    ioHook.on('mouseclick', ()=>{eventHandler('mouseclick')});
-    ioHook.on('mousedown', ()=>{eventHandler('mousedown')});
-    ioHook.on('mouseup', ()=>{eventHandler('mouseup')});
-    ioHook.on('mousedrag', ()=>{eventHandler('mousedrag')});
-    ioHook.on('mousewheel', ()=>{eventHandler('mousewheel')});
-    ioHook.on('mouse', ()=>{eventHandler('mousedrag')});
-    ioHook.on('keyup', ()=>{eventHandler('keyup')});
-    ioHook.on('keydown', ()=>{eventHandler('keydown')});
+const { main } = require("./browsers")()
 
-
-    // console.log(nodeAbi.getTarget('68','node'))// 12.0.0
-    // console.log(nodeAbi.getTarget('70','electron'))//5.0.0
-
-
-app.on('before-quit', () => {
-    // 卸载iohook监听
-    ioHook.unload();
-    ioHook.stop();
-});
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
-if (process.env.NODE_ENV !== 'development') {
+if (Constants.production()) {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+app.allowRendererProcessReuse = false
 
-function createWindow () {
-  /**
-   * Initial window options
-   */
-  mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000
-  })
+class Application {
 
-  mainWindow.loadURL(winURL)
+  launchApp() {
+    const appLock = app.requestSingleInstanceLock()
+    if (!appLock) {
+      ///[TODO] 没有处理软件启动参数
+      app.quit()
+    } else {
+      this.beforeReady()
+      this.onReady()
+      this.onRunning()
+      this.onQuit()
+    }
+  }
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+  createWindow() {
+    main.init()
+    init(main.getWindow())
+  }
+
+
+  beforeReady() {
+    if (Constants.macOS()) {
+      if (Constants.production() && !app.isInApplicationsFolder()) {
+        app.moveToApplicationsFolder()
+      } else {
+        //Electron有API来配置macOS Dock中的应用程序图标
+        app.dock.hide()
+      }
+    } else {
+      /**
+       * 离屏渲染允许你以位图的方式来获取 BrowserWindow 中的内容，所以它可以在任何地方被渲染
+       * 1.GPU加速渲染意味着使用GPU用于合成。 这也就意味着帧必须从GPU拷贝过来，从而需求更多的资源，因此这会比软件输出设备更慢
+       * 2.软件输出设备在 CPU 中渲染，因此帧 生成的速度要快得多。 因此，此模式优先于 GPU 加速模式。
+       */
+      app.disableHardwareAcceleration()
+    }
+  }
+  onReady() {
+    const readyFunction = () => {
+      this.createWindow()
+      //准备系统托盘
+      createTray(main.getWindow())
+      //autoUpdate()
+    }
+    if (!app.isReady()) {
+      app.on('ready', readyFunction)
+    } else {
+      readyFunction()
+    }
+  }
+  onRunning() {
+    app.on('second-instance', (event, argv, workDir) => {
+      // 当运行第二个实例时,将会聚焦到Window这个窗口
+      let win = main.getWindow()
+      if (win) {
+        if (win.isMaximized()) {
+          win.restore()
+        }
+        win.focus()
+      }
+    })
+    app.on('activate', () => {
+      if (!main.getWindow()) {
+        this.createWindow()
+      }
+    })
+
+    if (Constants.windows()) {
+      app.setAppUserModelId(pkg.build.appId)
+    }
+  }
+  onQuit() {
+    app.on('window-all-closed', () => {
+      if (process.platform !== 'darwin') {
+        app.quit()
+      }
+    })
+
+    app.on('will-quit', () => {
+      ///准备退出，取消快捷键注册等
+    })
+    if (Constants.dev()) {
+      if (process.platform === 'win32') {
+        process.on('message', data => {
+          if (data === 'graceful-exit') {
+            app.quit()
+          }
+        })
+      } else {
+        process.on('SIGTERM', () => {
+          app.quit()
+        })
+      }
+    }
+
+  }
+
 }
 
-app.on('ready', createWindow)
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
-
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
-import { autoUpdater } from 'electron-updater'
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
- */
+(new Application()).launchApp()
