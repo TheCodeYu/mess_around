@@ -9,18 +9,6 @@ module.exports = () => {
     let init = (options) => {
         createWindow(options)
 
-        win.once("ready-to-show", () => {
-            // 非隐藏式启动需要显示主窗口
-            if (!app.getLoginItemSettings().wasOpenedAsHidden) {
-                win.show();
-            }
-        });
-
-        // 打包后，失焦隐藏
-        win.on('blur', () => {
-            app.isPackaged && win.hide();
-        });
-
     }
 
     let createWindow = (options) => {

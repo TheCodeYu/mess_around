@@ -37,3 +37,17 @@ yarn add iohook	#need
 |             |       |        |          |      |
 |             |       |        |          |      |
 
+# 附录二	鸣谢
+
+感谢以下单位或个人提供的资源及框架，如有侵权，联系作者
+
+1. Electron，Vue，Typescript
+
+2. 参考项目：https://gitee.com/monkeyWang/rubick
+
+3. 图标库：https://www.iconfont.cn/
+
+   
+
+   
+

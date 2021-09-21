@@ -10,7 +10,7 @@ export default function createTray(window) {
         if (Constants.macOS()) {
             icon = './icon@3x.png'
         } else if (Constants.windows()) {
-            icon = parseInt(os.release()) < 10 ? './icon@2x.png' : './icon@2x.png'
+            icon = parseInt(os.release()) < 10 ? './icon@2x.png' : './icon@3x.png'
         } else {
             icon = './icon@2x.png'
         }

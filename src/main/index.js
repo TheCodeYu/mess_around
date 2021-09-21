@@ -5,6 +5,7 @@ import Strore from 'electron-store'
 import init from './common/common'
 import pkg from '../../package.json'
 import createTray from './common/tray'
+
 Strore.initRenderer()
 
 const { main } = require("./browsers")()
