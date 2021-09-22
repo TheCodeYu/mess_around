@@ -1,3 +1,5 @@
+import fs from 'fs'
+import pkg from '../../../package.json'
 export const Constants = {
     linux: function () {
         return process.platform === 'linux'
@@ -17,12 +19,13 @@ export const Constants = {
 }
 
 export const getlocalDataFile = () => {
-    let localDataFile = process.env.HOME
-
-    if (!localDataFile) {
-        localDataFile = process.env.LOCALAPPDATA
+    let localDataFile = process.env.LOCALAPPDATA + `/${pkg.build.appId}`
+    if (!fs.existsSync(localDataFile)) {
+        fs.mkdirSync(localDataFile)
     }
+
     return localDataFile
+
 }
 
 export function throttle(func, wait, options) {

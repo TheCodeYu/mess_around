@@ -5,14 +5,32 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
-    },
-    {
-      path: '*',
-      redirect: '/'
-    }
+    // {
+    //   path: '/home',
+    //   name: 'search',
+    //   component: require('@/pages/search/index.vue').default,
+    //   children: [
+    //     {
+    //       path: 'market',
+    //       component: Market
+    //     },
+    //     {
+    //       path: 'dev',
+    //       component: Dev
+    //     },
+    //     {
+    //       path: 'plugin',
+    //       component: Installed
+    //     },
+    //     {
+    //       path: 'settings',
+    //       component: Settings
+    //     },
+    //   ]
+    // },
+    // {
+    //   path: '*',
+    //   redirect: '/home'
+    // }
   ]
 })

@@ -97,13 +97,15 @@ global.opConfig = {
             if (!opConfig.config.version || opConfig.config.version < defaultConfig[platform].version) {
 
                 opConfig.config = defaultConfig[platform]
-                console.log('defaultConfig', configPath)
+
                 fs.writeFileSync(configPath, JSON.stringify(opConfig.config))
             }
         } catch (error) {
+
             opConfig.config = defaultConfig[platform]
-            return opConfig.config
+
         }
+        return opConfig.config
     },
     set(key, value) {
         opConfig.config[key] = value

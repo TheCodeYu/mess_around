@@ -20,6 +20,7 @@ class Application {
 
   launchApp() {
     const appLock = app.requestSingleInstanceLock()
+    // console.log(process.env)
     if (!appLock) {
       ///[TODO] 没有处理软件启动参数
       app.quit()
