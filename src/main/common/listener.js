@@ -143,7 +143,7 @@ export default class Listener {
 
     changeSize(mainWindow) {
         // 修改窗口尺寸
-        ipcMain.on('changeWindowSize-rubick', (event, arg) => {
+        ipcMain.on('changeWindowSize-mess', (event, arg) => {
             mainWindow.setSize(arg.width || 800, arg.height)
         })
     }
