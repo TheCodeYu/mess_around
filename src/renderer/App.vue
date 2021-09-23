@@ -220,6 +220,40 @@ export default {
         }
       }
     },
+    targetSearch(action) {
+      // 在插件界面唤起搜索功能
+      if (
+        (this.selected && this.selected.key === "plugin-container") ||
+        this.searchType === "subWindow"
+      ) {
+        const webview = document.getElementById("webview");
+        if (action.type === "space") {
+          if (this.config.perf.common.space) {
+            webview.send("msg-back-setSubInput", this.searchValue);
+          }
+          return;
+        }
+        webview.send("msg-back-setSubInput", this.searchValue);
+      } else if (this.showOptions) {
+        const item = this.options[this.currentSelect];
+        item.click(this.$router);
+      }
+    },
+    renderTitle(title) {
+      if (typeof title !== "string") return;
+      const result = title.toLowerCase().split(this.searchValue.toLowerCase());
+      if (result && result.length > 1) {
+        return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`;
+      } else {
+        return `<div>${result[0]}</div>`;
+      }
+    },
+    checkNeedInit(e) {
+      // 如果搜索栏无内容，且按了删除键，则清空 tag
+      if (this.searchValue === "" && e.keyCode === 8) {
+        this.closeTag();
+      }
+    },
     search(v) {
       if (!v.disableDebounce) {
         this.onSearch(v);

@@ -2,9 +2,10 @@
 import { WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS, APP_FINDER_PATH } from './constant'
 const { ipcRenderer } = require("electron")
 import Strore from 'electron-store'
-
+const getApp = process.platform === 'win32' ? require('./win-app').getApp : require('./darwin-app').getApp;
 const store = new Strore()
-
+getApp.init();
+const fileLists = getApp.fileLists;
 function getWindowHeight(searchList) {
     if (!searchList) return WINDOW_MAX_HEIGHT;
     if (!searchList.length) return WINDOW_MIN_HEIGHT;
@@ -12,6 +13,14 @@ function getWindowHeight(searchList) {
         ? WINDOW_MAX_HEIGHT
         : searchList.length * PRE_ITEM_HEIGHT + WINDOW_MIN_HEIGHT + 5;
 }
+
+function searchKeyValues(lists, value) {
+    return lists.filter((item) => {
+      if (typeof item === 'string') return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+      return item.type.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+    });
+  }
+
 const sysFile = {
 
     savePlugins(plugins) {
@@ -103,5 +112,7 @@ export {
     getWindowHeight,
     mergePlugins,
     debounce,
-    sysFile
+    sysFile,
+    searchKeyValues,
+    fileLists
 }

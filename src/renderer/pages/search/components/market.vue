@@ -3,7 +3,6 @@
     <a-carousel v-if="bannerList && !!bannerList.length" arrows>
       <div
         slot="prevArrow"
-        slot-scope="props"
         class="custom-slick-arrow"
         style="left: 10px; zindex: 1"
       >
@@ -11,13 +10,12 @@
       </div>
       <div
         slot="nextArrow"
-        slot-scope="props"
         class="custom-slick-arrow"
         style="right: 10px"
       >
         <a-icon type="right-circle" />
       </div>
-      <div v-for="banner in bannerList">
+      <div v-for="banner in bannerList" v-bind:key="banner">
         <img @click="jumpTo(banner.link)" width="100%" :src="banner.src" />
       </div>
     </a-carousel>
