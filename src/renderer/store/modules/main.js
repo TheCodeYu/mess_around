@@ -1,14 +1,20 @@
-import { sysFile } from '../../assets/common/utils'
+import { ipcRenderer } from 'electron';
+import { getWindowHeight, mergePlugins, sysFile } from '../../assets/common/utils'
 
 const state = {
-    searchValue: '',
     selected: null,
-    subPlaceHolder: '',
+    options: [],
+    showMain: false,
+    //    current: ["market"],
+    searchValue: "",
+    devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
+    subPlaceHolder: "",
+    pluginLoading: true,
     pluginInfo: (() => {
         try {
-            return window.pluginInfo || {}
+            return window.pluginInfo || {};
         } catch (e) { }
-    })()
+    })(),
 }
 
 
@@ -28,6 +34,20 @@ const mutations = {
 
 const actions = {
 
+    showMainUI({ commit, state }, paylpad) {
+        ipcRenderer.send('changeWindowSize-mess', {
+            height: getWindowHeight()
+        })
+        setTimeout(() => {
+            commit("commonUpdate", {
+                showMain: true,
+                selected: {
+                    key: "market",
+                    name: "插件中心"
+                }
+            })
+        }, 50)
+    },
     async onSearch({ commit }, paylpad) {
         console.log(1111)
     }

@@ -20,6 +20,7 @@
               ? subPlaceHolder
               : 'Hi,Mess Around'
           "
+          @mousedown.stop="dragWhenInput"
           class="main-input"
           @change="(e) => search({ value: e.target.value })"
           @keydown.ctrl.86="shouldPaste"
@@ -58,6 +59,59 @@
             </div>
           </div>
         </a-input>
+        <div class="options" v-show="showOptions">
+          <a-list item-layout="horizontal" :data-source="options">
+            <a-list-item
+              @click="() => item.click($router)"
+              :class="currentSelect === index ? 'active op-item' : 'op-item'"
+              slot="renderItem"
+              slot-scope="item, index"
+            >
+              <a-list-item-meta :description="item.desc">
+                <span slot="title" v-html="renderTitle(item.name)"></span>
+                <a-avatar
+                  slot="avatar"
+                  style="border-radius: 0"
+                  :src="item.icon"
+                />
+                <a-tag v-show="item.type === 'dev'">开发者</a-tag>
+                <a-tag v-show="item.type === 'system'">系统</a-tag>
+              </a-list-item-meta>
+            </a-list-item>
+          </a-list>
+        </div>
+      </div>
+      <div class="mess-select-subMenu" v-else>
+        <div>
+          <img
+            class="icon-tool-sub"
+            v-if="pluginInfo.icon"
+            :src="pluginInfo.icon"
+          />
+          <a-input
+            :placeholder="subPlaceHolder"
+            class="sub-input"
+            @change="
+              (e) =>
+                search({
+                  value: e.target.value,
+                  searchType: pluginInfo.searchType,
+                })
+            "
+            :value="searchValue"
+            @keypress.enter="
+              (e) => targetSearch({ value: e.target.value, type: 'enter' })
+            "
+            @keypress.space="
+              (e) => targetSearch({ value: e.target.value, type: 'space' })
+            "
+          ></a-input>
+        </div>
+
+        <div class="icon-container">
+          <a-icon class="icon" type="info-circle" />
+          <a-icon class="icon" @click="goMenu('separate')" type="setting" />
+        </div>
       </div>
       <router-view></router-view>
     </a-layout>
@@ -68,7 +122,9 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import { clipboard, ipcRenderer, remote } from "electron";
 import { getWindowHeight, debounce } from "./assets/common/utils";
+import { Constants } from "../main/common/utils";
 const opConfig = remote.getGlobal("opConfig");
+const { Menu } = remote;
 export default {
   data() {
     return {
@@ -82,30 +138,146 @@ export default {
       this.commonUpdate({ pluginInfo: pluginInfo });
     };
   },
+
   mounted() {
     ipcRenderer.on("init-mess", this.closeTag);
+    ipcRenderer.on("new-window", this.newWindow);
+    // 超级面板打开插件
+    ipcRenderer.on("superPanel-openPlugin", (e, args) => {
+      this.closeTag();
+      ipcRenderer.send("msg-trigger", {
+        type: "showMainWindow",
+      });
+      this.openPlugin({
+        cmd: args.cmd,
+        plugin: args.plugin,
+        feature: args.feature,
+        router: this.$router,
+        payload: args.data,
+      });
+    });
+    ipcRenderer.on("global-short-key", (e, args) => {
+      let config;
+      this.devPlugins.forEach((plugin) => {
+        // dev 插件未开启
+        if (plugin.type === "dev" && !plugin.status) return;
+        const feature = plugin.features;
+        feature.forEach((fe) => {
+          const cmd = searchKeyValues(fe.cmds, args)[0];
+          const systemPlugin = fileLists.filter((plugin) => {
+            let has = false;
+            plugin.keyWords.some((keyWord) => {
+              if (
+                keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >=
+                0
+              ) {
+                has = keyWord;
+                plugin.name = keyWord;
+                return true;
+              }
+              return false;
+            });
+            return has;
+          })[0];
+          if (cmd) {
+            config = {
+              cmd: cmd,
+              plugin: plugin,
+              feature: fe,
+              router: this.$router,
+            };
+          } else if (systemPlugin) {
+            config = {
+              plugin: systemPlugin,
+              router: this.$router,
+            };
+          }
+        });
+      });
+      config && this.openPlugin(config);
+    });
+    // 打开偏好设置
+    ipcRenderer.on("tray-setting", () => {
+      this.showMainUI();
+      this.changePath({ key: "settings" });
+    });
+    const searchNd = document.getElementById("search");
+    searchNd && searchNd.addEventListener("keydown", this.checkNeedInit);
   },
   methods: {
-    ...mapActions("main", ["onSearch"]),
+    ...mapActions("main", ["onSearch", "showMainUI"]),
     ...mapMutations("main", ["commonUpdate"]),
     shouldPaste(v) {
       let filePath;
-      if (process.platform === "win32") {
+      if (Constants.windows()) {
         const rawFilePath = clipboard.read("FileNameW");
         filePath = rawFilePath.replace(
           new RegExp(String.fromCharCode(0), "g"),
           ""
         );
         if (filePath.indexOf("plugin.json") >= 0) {
-          this.search({ filePath });
+          this.search({ filePath, disableDebounce: true });
         }
       }
     },
     search(v) {
+      if (!v.disableDebounce) {
+        this.onSearch(v);
+        return;
+      }
       if (!this.searchFn) {
         this.searchFn = debounce(this.onSearch, 200);
       }
       this.searchFn(v);
+    },
+    newWindow() {
+      ipcRenderer.send("new-window", {
+        ...this.pluginInfo,
+      });
+      this.closeTag();
+    },
+    goMenu(type) {
+      if (
+        (this.selected && this.selected.key === "plugin-containe") ||
+        type === "separate"
+      ) {
+        const pluginMenu = [
+          {
+            label: "开发者工具",
+            click: () => {
+              document.getElementById("webview").openDevTools();
+            },
+          },
+          {
+            label: "当前插件信息",
+            submenu: [
+              {
+                label: "简介",
+              },
+              {
+                label: "功能",
+              },
+            ],
+          },
+          {
+            label: "隐藏插件",
+          },
+        ];
+        if (type !== "separate") {
+          pluginMenu.unshift({ label: "分离窗口", click: this.newWindow });
+        }
+        let menu = Menu.buildFromTemplate(pluginMenu);
+        menu.popup();
+        return;
+      }
+      this.showMainUI();
+      this.changePath({ key: "market" });
+    },
+    changePath({ key }) {
+      this.$router.push({ path: `/home/${key}` });
+      this.commonUpdate({
+        current: [key],
+      });
     },
     changeCurrent(index) {
       const webview = document.getElementById("webview");
@@ -120,6 +292,11 @@ export default {
     },
     drag() {
       ipcRenderer.send("window-move");
+    },
+    dragWhenInput(e) {
+      if (this.searchValue == "") {
+        ipcRenderer.send("window-move");
+      }
     },
     closeTag(v) {
       this.commonUpdate({
@@ -141,13 +318,23 @@ export default {
   },
   computed: {
     ...mapState("main", [
+      "showMain",
+      "devPlugins",
+      "current",
+      "options",
+      "selected",
       "searchValue",
       "subPlaceHolder",
       "pluginInfo",
-      "selected",
+      "pluginLoading",
     ]),
+    showOptions() {
+      //显示选项，不是主页
+      if (this.options.length && !this.showMain) {
+        return true;
+      }
+    },
     searchType() {
-      console.log(this.pluginInfo.searchType);
       return this.pluginInfo.searchType ? "subWindow" : "";
     },
   },

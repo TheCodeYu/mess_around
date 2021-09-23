@@ -5,7 +5,7 @@ import { ipcRenderer, remote } from 'electron'
 import App from './App'
 import router from './router'
 import store from './store'
-import antd from 'ant-design-vue'
+import Antd from 'ant-design-vue'
 
 import './assets/ant.less'
 
@@ -15,7 +15,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-Vue.use(antd)
+Vue.use(Antd)
 /* eslint-disable no-new */
 new Vue({
   components: { App },
