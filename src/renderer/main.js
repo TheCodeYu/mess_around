@@ -24,25 +24,27 @@ new Vue({
   template: '<App/>'
 }).$mount('#app')
 
-iohook.start(false)
 
-let down_time = 0
-let isPress = false
+//快捷键呼出面板
+// iohook.start(false)
 
-iohook.on('mousedown', (e) => {
-  if (e.button === 1) return
-  isPress = true
-  down_time = Date.now()
-  const config = opConfig.get()
-  setTimeout(async () => {
-    if (isPress) {
-      //长按呼出面板
-      ipcRenderer.send('right-down')
-    }
-  }, config.superPanel.mouseDownTime);
-})
+// let down_time = 0
+// let isPress = false
 
-iohook.on('mouseup', (e) => {
-  if (e.button === 1) return
-  isPress = false
-})
+// iohook.on('mousedown', (e) => {
+//   if (e.button === 1) return
+//   isPress = true
+//   down_time = Date.now()
+//   const config = opConfig.get()
+//   setTimeout(async () => {
+//     if (isPress) {
+//       //长按呼出面板
+//       ipcRenderer.send('right-down')
+//     }
+//   }, config.superPanel.mouseDownTime);
+// })
+
+// iohook.on('mouseup', (e) => {
+//   if (e.button === 1) return
+//   isPress = false
+// })

@@ -1,16 +1,16 @@
 import { app, BrowserWindow, globalShortcut } from 'electron'
-import { Constants } from './common/utils'
+import { Platform } from './common/utils'
 import { autoUpdate } from './common/autoUpdate'
 import Strore from 'electron-store'
 import init from './common/common'
-import pkg from '../../package.json'
+import {Config} from '../resource/config'
 import createTray from './common/tray'
 
 Strore.initRenderer()
 
 const { main } = require("./browsers")()
 
-if (Constants.production()) {
+if (Platform.production()) {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
@@ -20,7 +20,8 @@ class Application {
 
   launchApp() {
     const appLock = app.requestSingleInstanceLock()
-    // console.log(process.env)
+    /// 环境变量处理软件启动参数
+    /// console.log(process.env)
     if (!appLock) {
       ///[TODO] 没有处理软件启动参数
       app.quit()
@@ -39,8 +40,8 @@ class Application {
 
 
   beforeReady() {
-    if (Constants.macOS()) {
-      if (Constants.production() && !app.isInApplicationsFolder()) {
+    if (Platform.macOS()) {
+      if (Platform.production() && !app.isInApplicationsFolder()) {
         app.moveToApplicationsFolder()
       } else {
         //Electron有API来配置macOS Dock中的应用程序图标
@@ -85,13 +86,13 @@ class Application {
       }
     })
 
-    if (Constants.windows()) {
-      app.setAppUserModelId(pkg.build.appId)
+    if (Platform.windows()) {
+      app.setAppUserModelId(Config.appInfo.appid)
     }
   }
   onQuit() {
     app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
+      if (!Platform.macOS()) {
         app.quit()
       }
     })
@@ -99,8 +100,8 @@ class Application {
     app.on('will-quit', () => {
       ///准备退出，取消快捷键注册等
     })
-    if (Constants.dev()) {
-      if (process.platform === 'win32') {
+    if (Platform.dev()) {
+      if (!Platform.windows()) {
         process.on('message', data => {
           if (data === 'graceful-exit') {
             app.quit()

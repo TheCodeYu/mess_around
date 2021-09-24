@@ -1,15 +1,15 @@
-import { Constants } from "./utils"
+import { Platform } from "./utils"
 import os from 'os'
 import { app, dialog, Menu, shell, Tray } from "electron"
 import path from "path"
-import pkg from '../../../package.json';
+import {Event,Config} from '../../resource/config'
 export default function createTray(window) {
 
     return new Promise((resolve, reject) => {
         let icon
-        if (Constants.macOS()) {
+        if (Platform.macOS()) {
             icon = './icon@3x.png'
-        } else if (Constants.windows()) {
+        } else if (Platform.windows()) {
             icon = parseInt(os.release()) < 10 ? './icon@2x.png' : './icon@3x.png'
         } else {
             icon = './icon@2x.png'
@@ -37,7 +37,7 @@ export default function createTray(window) {
             { type: 'separator' },
             {
                 label: '显示窗口',
-                accelerator: 'Alt+R',
+                accelerator: Event.traySetting,
                 click: () => {
                     window.show()
                 }
@@ -67,7 +67,7 @@ export default function createTray(window) {
                     dialog.showMessageBox({
                         title: 'mess around',
                         message: '程序员的摸鱼软件',
-                        detail: `Version:${pkg.version}\nAuthor:${pkg.author}`
+                        detail: `Version:${Config.appInfo.version}\nAuthor:${Config.appInfo.author}`
                     })
                 }
             },

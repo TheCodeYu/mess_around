@@ -19,7 +19,7 @@ const state = {
   current: [],
   searchValue: "",
   devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
-  subPlaceHolder: "",
+  subPlaceHolder: 'Hi,Mess Around',
   pluginLoading: true,
   pluginInfo: (() => {
     try {
@@ -61,10 +61,10 @@ const actions = {
   },
   async onSearch({ commit }, payload) {
     console.log(1111)
-    if (state.selected && state.selected.key !== "plugin-container") {
-      commit("commonUpdate", { searchValue: "" });
-      return;
-    }
+    // if (state.selected && state.selected.key !== "plugin-container") {
+    //   commit("commonUpdate", { searchValue: "" });
+    //   return;
+    // }
     const value = payload.value;
     // 在插件界面不触发其他功能
     if (

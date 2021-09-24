@@ -1,16 +1,18 @@
 
 import pkg from '../../package.json'
 /**
- * 事件监听名称
+ * 自定义的事件监听名称
  */
-const Event = {
-
+ export const Event = {
+  changeWindowSize:'changeWindowSize',//修改窗口尺寸
+  windowMove:'window-move',//移动窗体
+  traySetting:'tray-setting',//托盘设置
 }
 /**
  * 全局配置信息
  * 如外部一些开放平台API
  */
-const Config = {
+ export const Config = {
   appInfo: {
     name: pkg.name,
     version: pkg.version,
@@ -19,10 +21,4 @@ const Config = {
     license: pkg.license,
     appid: pkg.build.appId
   }
-}
-
-
-export default {
-  Event,
-  Config
 }

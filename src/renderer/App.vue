@@ -15,19 +15,13 @@
         </div>
         <a-input
           id="search"
-          :placeholder="
-            subPlaceHolder && selected && selected.key === 'plugin-container'
-              ? subPlaceHolder
-              : 'Hi,Mess Around'
-          "
+          :placeholder="subPlaceHolder"
           @mousedown.stop="dragWhenInput"
           class="main-input"
           @change="(e) => search({ value: e.target.value })"
           @keydown.ctrl.86="shouldPaste"
           :value="searchValue"
-          :maxLength="
-            selected && selected.key !== 'plugin-container' ? 0 : 1000
-          "
+          :maxLength=1000
           @keydown.down="() => changeCurrent(1)"
           @keydown.up="() => changeCurrent(-1)"
           @keypress.enter="
@@ -122,7 +116,8 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import { clipboard, ipcRenderer, remote } from "electron";
 import { getWindowHeight, debounce } from "./assets/common/utils";
-import { Constants } from "../main/common/utils";
+import { Platform } from "../main/common/utils";
+import {Event} from '../resource/config'
 const opConfig = remote.getGlobal("opConfig");
 const { Menu } = remote;
 export default {
@@ -134,70 +129,15 @@ export default {
     };
   },
   created() {
+    ///设置当前插件信息
     window.setPluginInfo = (pluginInfo) => {
       this.commonUpdate({ pluginInfo: pluginInfo });
     };
   },
 
   mounted() {
-    ipcRenderer.on("init-mess", this.closeTag);
-    ipcRenderer.on("new-window", this.newWindow);
-    // 超级面板打开插件
-    ipcRenderer.on("superPanel-openPlugin", (e, args) => {
-      this.closeTag();
-      ipcRenderer.send("msg-trigger", {
-        type: "showMainWindow",
-      });
-      this.openPlugin({
-        cmd: args.cmd,
-        plugin: args.plugin,
-        feature: args.feature,
-        router: this.$router,
-        payload: args.data,
-      });
-    });
-    ipcRenderer.on("global-short-key", (e, args) => {
-      let config;
-      this.devPlugins.forEach((plugin) => {
-        // dev 插件未开启
-        if (plugin.type === "dev" && !plugin.status) return;
-        const feature = plugin.features;
-        feature.forEach((fe) => {
-          const cmd = searchKeyValues(fe.cmds, args)[0];
-          const systemPlugin = fileLists.filter((plugin) => {
-            let has = false;
-            plugin.keyWords.some((keyWord) => {
-              if (
-                keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >=
-                0
-              ) {
-                has = keyWord;
-                plugin.name = keyWord;
-                return true;
-              }
-              return false;
-            });
-            return has;
-          })[0];
-          if (cmd) {
-            config = {
-              cmd: cmd,
-              plugin: plugin,
-              feature: fe,
-              router: this.$router,
-            };
-          } else if (systemPlugin) {
-            config = {
-              plugin: systemPlugin,
-              router: this.$router,
-            };
-          }
-        });
-      });
-      config && this.openPlugin(config);
-    });
     // 打开偏好设置
-    ipcRenderer.on("tray-setting", () => {
+    ipcRenderer.on(Event.traySetting, () => {
       this.showMainUI();
       this.changePath({ key: "settings" });
     });
@@ -272,7 +212,7 @@ export default {
     },
     goMenu(type) {
       if (
-        (this.selected && this.selected.key === "plugin-containe") ||
+        (this.selected && this.selected.key === "plugin-container") ||
         type === "separate"
       ) {
         const pluginMenu = [
@@ -325,11 +265,11 @@ export default {
       this.currentSelect = this.currentSelect + index;
     },
     drag() {
-      ipcRenderer.send("window-move");
+      ipcRenderer.send(Event.windowMove);
     },
     dragWhenInput(e) {
       if (this.searchValue == "") {
-        ipcRenderer.send("window-move");
+        ipcRenderer.send(Event.windowMove);
       }
     },
     closeTag(v) {
@@ -363,10 +303,11 @@ export default {
       "pluginLoading",
     ]),
     showOptions() {
-      //显示选项，不是主页
+      //显示搜索选项，没有MainUI时
       if (this.options.length && !this.showMain) {
         return true;
       }
+      return false
     },
     searchType() {
       return this.pluginInfo.searchType ? "subWindow" : "";

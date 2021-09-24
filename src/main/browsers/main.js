@@ -1,5 +1,5 @@
 
-const { app, BrowserWindow, protocol } = require("electron")
+const { BrowserWindow, protocol } = require("electron")
 
 
 module.exports = () => {
@@ -23,8 +23,7 @@ module.exports = () => {
             width: 800,
             frame: false,
             title: '摸鱼神器',
-            show: false,
-            skipTaskbar: true,
+            icon:'build/icons/icon.ico',
             webPreferences: {
                 webSecurity: false,
                 enableRemoteModule: true,
