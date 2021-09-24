@@ -21,7 +21,7 @@
           @change="(e) => search({ value: e.target.value })"
           @keydown.ctrl.86="shouldPaste"
           :value="searchValue"
-          :maxLength=1000
+          :maxLength="1000"
           @keydown.down="() => changeCurrent(1)"
           @keydown.up="() => changeCurrent(-1)"
           @keypress.enter="
@@ -46,7 +46,7 @@
                   spin
                 />
               </a-spin>
-              <img class="icon-tool" :src="selected.icon" />
+              <img class="icon-tool" src="./assets/imgs/logo.png" />
             </div>
             <div v-else class="mess-logo">
               <img src="./assets/imgs/logo.png" />
@@ -117,7 +117,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import { clipboard, ipcRenderer, remote } from "electron";
 import { getWindowHeight, debounce } from "./assets/common/utils";
 import { Platform } from "../main/common/utils";
-import {Event} from '../resource/config'
+import { Event } from "../resource/config";
 const opConfig = remote.getGlobal("opConfig");
 const { Menu } = remote;
 export default {
@@ -138,8 +138,7 @@ export default {
   mounted() {
     // 打开偏好设置
     ipcRenderer.on(Event.traySetting, () => {
-      this.showMainUI();
-      this.changePath({ key: "settings" });
+      this.showMainUI({ key: "settings" });
     });
     const searchNd = document.getElementById("search");
     searchNd && searchNd.addEventListener("keydown", this.checkNeedInit);
@@ -244,14 +243,11 @@ export default {
         menu.popup();
         return;
       }
-      this.showMainUI();
-      this.changePath({ key: "market" });
-    },
-    changePath({ key }) {
-      this.$router.push({ path: `/home/${key}` });
-      this.commonUpdate({
-        current: [key],
-      });
+      if (this.selected) {
+        this.closeTag();
+      } else {
+        this.showMainUI({ key: this.current[0] });
+      }
     },
     changeCurrent(index) {
       const webview = document.getElementById("webview");
@@ -278,8 +274,8 @@ export default {
         showMain: false,
         option: [],
       });
-      ipcRenderer.send("changeWindowSize-mess", {
-        height: getWindowHeight(),
+      ipcRenderer.send(Event.changeWindowSize, {
+        height: 60,
       });
       if (this.$router.history.current.fullPath !== "/home") {
         // 该if是为了避免跳转到相同路由而报错。
@@ -307,7 +303,7 @@ export default {
       if (this.options.length && !this.showMain) {
         return true;
       }
-      return false
+      return false;
     },
     searchType() {
       return this.pluginInfo.searchType ? "subWindow" : "";

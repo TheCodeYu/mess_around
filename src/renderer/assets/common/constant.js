@@ -18,5 +18,27 @@ const SYSTEM_PLUGINS = [
   },
 ]
 
+const MAIN_MENU = {
+  market: {
+    key: "market",
+    icon: 'appstore',
+    name: "插件中心"
+  },
+  plugin: {
+    key: "plugin",
+    icon: 'heart',
+    name: "已安装"
+  },
+  dev: {
+    key: "dev",
+    icon: 'code',
+    name: "开发者"
+  },
+  settings: {
+    key: "settings",
+    icon: 'setting',
+    name: "设置"
+  }
+}
 const APP_FINDER_PATH = process.platform === 'darwin' ? ['/System/Applications', '/Applications', '/System/Library/PreferencePanes'] : [];
-export { WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS, APP_FINDER_PATH };
+export { MAIN_MENU, WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS, APP_FINDER_PATH };

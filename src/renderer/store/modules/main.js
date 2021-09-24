@@ -7,11 +7,11 @@ import {
   fileLists
 } from '../../assets/common/utils'
 import { v4 as uuidv4 } from "uuid";
-
+import { MAIN_MENU } from '../../assets/common/constant'
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
-
+import { Event } from '../../../resource/config'
 const state = {
   selected: null,
   options: [],
@@ -45,17 +45,15 @@ const mutations = {
 
 const actions = {
 
-  showMainUI({ commit, state }, paylpad) {
-    ipcRenderer.send('changeWindowSize-mess', {
+  showMainUI({ commit, state }, payload) {
+    ipcRenderer.send(Event.changeWindowSize, {
       height: getWindowHeight()
     })
+    console.log(payload)
     setTimeout(() => {
       commit("commonUpdate", {
         showMain: true,
-        selected: {
-          key: "market",
-          name: "插件中心"
-        }
+        selected: MAIN_MENU[payload.key]
       })
     }, 50)
   },

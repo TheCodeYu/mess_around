@@ -2,7 +2,7 @@ import { Platform } from "./utils"
 import os from 'os'
 import { app, dialog, Menu, shell, Tray } from "electron"
 import path from "path"
-import {Event,Config} from '../../resource/config'
+import { Event, Config } from '../../resource/config'
 export default function createTray(window) {
 
     return new Promise((resolve, reject) => {
@@ -37,7 +37,7 @@ export default function createTray(window) {
             { type: 'separator' },
             {
                 label: '显示窗口',
-                accelerator: Event.traySetting,
+                accelerator: 'Alt + R',
                 click: () => {
                     window.show()
                 }
@@ -58,7 +58,7 @@ export default function createTray(window) {
                 label: '偏好设置',
                 click: () => {
                     window.show()
-                    window.webContents.send('tray-setting');
+                    window.webContents.send(Event.traySetting);
                 }
             },
             {
