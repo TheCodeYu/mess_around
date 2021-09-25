@@ -16,7 +16,7 @@ const state = {
   selected: null,
   options: [],
   showMain: false,
-  current: [],
+  current: ['market'],
   searchValue: "",
   devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
   subPlaceHolder: 'Hi,Mess Around',
@@ -31,9 +31,10 @@ const state = {
 
 const mutations = {
   commonUpdate(state, payload) {
+
     Object.keys(payload).forEach((key) => {
       state[key] = payload[key]
-      if (key === 'devPligins') {
+      if (key === 'devPlugins') {
         sysFile.savePlugins(payload[key])
       }
     })
@@ -219,7 +220,7 @@ const actions = {
     commit("commonUpdate", {
       options,
     });
-    ipcRenderer.send("changeWindowSize-mess", {
+    ipcRenderer.send("changeWindowSize", {
       height: getWindowHeight(state.options),
     });
   },
@@ -232,7 +233,7 @@ const actions = {
         options: [],
         searchValue: "",
       });
-      ipcRenderer.send("changeWindowSize-mess", {
+      ipcRenderer.send("changeWindowSize", {
         height: getWindowHeight([]),
       });
       return;
@@ -246,7 +247,7 @@ const actions = {
       searchValue: "",
       showMain: true,
     });
-    ipcRenderer.send("changeWindowSize-mess", {
+    ipcRenderer.send("changeWindowSize", {
       height: getWindowHeight(),
     });
     if (plugin.type === "system") {
@@ -256,7 +257,7 @@ const actions = {
         showMain: false,
         options: [],
       });
-      ipcRenderer.send("changeWindowSize-mess", {
+      ipcRenderer.send("changeWindowSize", {
         height: getWindowHeight([]),
       });
       router.push({
@@ -272,7 +273,6 @@ const actions = {
         payload,
       },
     });
-
     router.push({
       path: "/plugin",
       query: {

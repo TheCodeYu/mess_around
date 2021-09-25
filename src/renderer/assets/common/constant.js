@@ -21,22 +21,22 @@ const SYSTEM_PLUGINS = [
 const MAIN_MENU = {
   market: {
     key: "market",
-    icon: 'appstore',
+    img: 'appstore',
     name: "插件中心"
   },
   plugin: {
     key: "plugin",
-    icon: 'heart',
+    img: 'heart',
     name: "已安装"
   },
   dev: {
     key: "dev",
-    icon: 'code',
+    img: 'code',
     name: "开发者"
   },
   settings: {
     key: "settings",
-    icon: 'setting',
+    img: 'setting',
     name: "设置"
   }
 }

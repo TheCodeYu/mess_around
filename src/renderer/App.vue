@@ -46,7 +46,7 @@
                   spin
                 />
               </a-spin>
-              <img class="icon-tool" src="./assets/imgs/logo.png" />
+              <img class="icon-tool" :src="selected.icon" />
             </div>
             <div v-else class="mess-logo">
               <img src="./assets/imgs/logo.png" />
@@ -68,9 +68,9 @@
                   style="border-radius: 0"
                   :src="item.icon"
                 />
-                <a-tag v-show="item.type === 'dev'">开发者</a-tag>
-                <a-tag v-show="item.type === 'system'">系统</a-tag>
               </a-list-item-meta>
+              <a-tag v-show="item.type === 'dev'">开发者</a-tag>
+              <a-tag v-show="item.type === 'system'">系统</a-tag>
             </a-list-item>
           </a-list>
         </div>
@@ -101,7 +101,6 @@
             "
           ></a-input>
         </div>
-
         <div class="icon-container">
           <a-icon class="icon" type="info-circle" />
           <a-icon class="icon" @click="goMenu('separate')" type="setting" />
@@ -118,6 +117,7 @@ import { clipboard, ipcRenderer, remote } from "electron";
 import { getWindowHeight, debounce } from "./assets/common/utils";
 import { Platform } from "../main/common/utils";
 import { Event } from "../resource/config";
+import { MAIN_MENU } from "../renderer/assets/common/constant";
 const opConfig = remote.getGlobal("opConfig");
 const { Menu } = remote;
 export default {
@@ -126,6 +126,7 @@ export default {
       searchFn: null,
       config: opConfig.get(),
       currentSelect: 0,
+      menu: MAIN_MENU,
     };
   },
   created() {
@@ -139,6 +140,7 @@ export default {
     // 打开偏好设置
     ipcRenderer.on(Event.traySetting, () => {
       this.showMainUI({ key: "settings" });
+      this.changePath({ key: "settings" });
     });
     const searchNd = document.getElementById("search");
     searchNd && searchNd.addEventListener("keydown", this.checkNeedInit);
@@ -148,7 +150,7 @@ export default {
     ...mapMutations("main", ["commonUpdate"]),
     shouldPaste(v) {
       let filePath;
-      if (Constants.windows()) {
+      if (Platform.windows()) {
         const rawFilePath = clipboard.read("FileNameW");
         filePath = rawFilePath.replace(
           new RegExp(String.fromCharCode(0), "g"),
@@ -247,7 +249,14 @@ export default {
         this.closeTag();
       } else {
         this.showMainUI({ key: this.current[0] });
+        this.changePath({ key: this.current[0] });
       }
+    },
+    changePath({ key }) {
+      this.$router.push({ path: `/home/${key}` });
+      this.commonUpdate({
+        current: [key],
+      });
     },
     changeCurrent(index) {
       const webview = document.getElementById("webview");

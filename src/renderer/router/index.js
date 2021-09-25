@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Market from '../pages/search/components/market';
+import Market from '../pages/search/components/market'
+import Dev from '../pages/search/components/dev'
+import Installed from '../pages/search/components/plugin'
+import Settings from '../pages/search/components/settings'
 Vue.use(Router)
 
 
@@ -19,25 +22,25 @@ export default new Router({
         path: 'market',
         component: Market
       },
-      // {
-      //   path: 'dev',
-      //   component: Dev
-      // },
-      // {
-      //   path: 'plugin',
-      //   component: Installed
-      // },
-      // {
-      //   path: 'settings',
-      //   component: Settings
-      // },
+      {
+        path: 'dev',
+        component: Dev
+      },
+      {
+        path: 'plugin',
+        component: Installed
+      },
+      {
+        path: 'settings',
+        component: Settings
+      },
     ]
   },
-  // {
-  //   path: '/plugin',
-  //   name: 'plugin',
-  //   component: require('@/pages/plugins/index.vue').default
-  // },
+  {
+    path: '/plugin',
+    name: 'plugin',
+    component: require('@/pages/plugins/index.vue').default
+  },
   {
     path: '*',
     redirect: '/home'

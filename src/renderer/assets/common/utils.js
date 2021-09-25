@@ -16,10 +16,10 @@ function getWindowHeight(searchList) {
 
 function searchKeyValues(lists, value) {
     return lists.filter((item) => {
-      if (typeof item === 'string') return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
-      return item.type.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        if (typeof item === 'string') return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        return item.type.toLowerCase().indexOf(value.toLowerCase()) >= 0;
     });
-  }
+}
 
 const sysFile = {
 
@@ -72,7 +72,7 @@ function mergePlugins(plugins) {
                 ...plugin,
                 status: true,
                 sourceFile: '',
-                typr: 'system'
+                type: 'system'
             }
         })
     ]

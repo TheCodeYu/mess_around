@@ -1,6 +1,6 @@
 
 const { BrowserWindow, protocol } = require("electron")
-
+const path = require('path')
 
 module.exports = () => {
 
@@ -23,14 +23,17 @@ module.exports = () => {
             width: 800,
             frame: false,
             title: '摸鱼神器',
-            icon:'build/icons/icon.ico',
+            icon: 'build/icons/icon.ico',
             webPreferences: {
                 webSecurity: false,
                 enableRemoteModule: true,
                 backgroundThrottling: false,
                 contextIsolation: false,
                 webviewTag: true,
-                nodeIntegration: true // 在网页中集成Node
+                nodeIntegrationInWorker: true,
+                nodeIntegration: true, // 在网页中集成Node
+                nodeIntegrationInSubFrames: true,
+
             }
         })
 

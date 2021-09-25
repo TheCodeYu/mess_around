@@ -3,7 +3,7 @@
     <div v-show="showMain">
       <a-menu :selectedKeys="current" mode="horizontal" @select="changePath">
         <a-menu-item :key="item.key" v-for="item in MAIN_MENU">
-          <a-icon :type="item.icon" />
+          <a-icon :type="item.img" />
           {{ item.name }}
         </a-menu-item>
       </a-menu>

@@ -1,5 +1,5 @@
 import fs from 'fs'
-import {Config} from '../../resource/config'
+import { Config } from '../../resource/config'
 export const Platform = {
     linux: function () {
         return process.platform === 'linux'
@@ -25,3 +25,4 @@ export const getlocalDataFile = () => {
     }
     return localDataFile
 }
+
