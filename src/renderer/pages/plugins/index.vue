@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>1112</h2>
     <webview
       v-if="!pluginInfo.subType"
       id="webview"
@@ -8,7 +7,6 @@
       :preload="preload"
     ></webview>
     <div v-else>
-      <h2>222</h2>
       <webview id="webview" :src="templatePath" :preload="preload"></webview>
     </div>
   </div>
@@ -17,14 +15,10 @@
 <script>
 import path from "path";
 import { mapMutations, mapState } from "vuex";
-import { remote } from "electron";
-const currentWindow = remote.getCurrentWindow();
-const winId = currentWindow.id;
 export default {
-  name: "index.vue",
   data() {
     return {
-      preload: `File://${path.join(__static, "./preload.js")}`,
+      preload: `File://${path.join(__static, './preload.js')}`,
       webview: null,
       config: {},
     };
@@ -46,10 +40,20 @@ export default {
         pluginLoading: false,
       });
     });
-    this.setSubPlaceHolder("Hi, Rubick");
+    this.setSubPlaceHolder(`Hi ${this.pluginInfo.name}`);
   },
   methods: {
     ...mapMutations("main", ["setSubPlaceHolder", "commonUpdate"]),
+  },
+   beforeDestroy() {
+     this.setSubPlaceHolder(`Hi Mess Around`);
+     this.commonUpdate({
+        searchValue: '',
+        options:[]
+      });
+    
+    const webview = document.querySelector('webview');
+    webview && webview.send('onPluginOut', this.pluginInfo)
   },
   computed: {
     ...mapState("main", ["searchValue", "devPlugins", "pluginInfo"]),
@@ -61,10 +65,10 @@ export default {
       ).features;
     },
     path() {
-      //   this.$nextTick(() => {
-      //     this.webview && this.webview.send("onPluginEnter", this.pluginInfo);
-      //   });
-      return `File://${this.pluginInfo.sourceFile}`;
+        // this.$nextTick(() => {
+        //   this.webview && this.webview.send("onPluginEnter", this.pluginInfo);
+        // });
+      return `File://D:\\zhouyu\\Git\\mess_around\\plugin-demo\\index.html`;
     },
     templatePath() {
       return `File://${path.join(__static, "./plugins/tpl/index.html")}?code=${

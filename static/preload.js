@@ -1,12 +1,6 @@
-const { getData, getlocalDataFile, saveData } = require("./utils");
-const axios = require('axios');
-const marked = require("marked");
-const rendererMD = new marked.Renderer();
-const path = require('path');
-const os = require('os');
+const { getlocalDataFile } = require("./utils");
 
-const appPath = path.join(getlocalDataFile());
-const dbPath = path.join(appPath, './db.json');
+const path = require('path');
 
 console.log(location)
 let filePath = '';
@@ -26,14 +20,9 @@ if (location.href.indexOf('targetFile') > -1) {
     filePath = process.platform === 'win32' ? location.pathname.substring(1) : location.pathname.replace('file://', '');
 }
 
-const { ipcRenderer, nativeImage, clipboard, remote, shell } = require('electron');
+const { ipcRenderer } = require('electron');
 
-const currentWindow = remote.getCurrentWindow();
-const winId = currentWindow.id;
-const BrowserWindow = remote.BrowserWindow;
-
-
-window.rubick = {
+window.mess = {
     onPluginEnter(cb) {
         ipcRenderer.on('onPluginEnter', (e, message) => {
             const feature = message.detail;
@@ -53,7 +42,7 @@ window.rubick = {
         })
     },
     showNotification(body, clickFeatureCode) {
-        const myNotification = new Notification('Rubick 通知', {
+        const myNotification = new Notification('Mess 通知', {
             body
         });
         return myNotification;
@@ -62,8 +51,10 @@ window.rubick = {
 }
 
 const preloadPath = getQueryVariable('preloadPath') || './preload.js';
-
-
+if (require('electron').remote) {
+   console.log(require('electron').remote)
+ }
 require(path.join(filePath, '../', preloadPath));
 window.exports && ipcRenderer.sendToHost('templateConfig', { config: JSON.parse(JSON.stringify(window.exports)) });
 window.ipcRenderer = ipcRenderer;
+console.log(window)

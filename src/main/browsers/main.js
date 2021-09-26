@@ -30,13 +30,11 @@ module.exports = () => {
                 backgroundThrottling: false,
                 contextIsolation: false,
                 webviewTag: true,
-                nodeIntegrationInWorker: true,
                 nodeIntegration: true, // 在网页中集成Node
-                nodeIntegrationInSubFrames: true,
-
             }
         })
 
+        console.log(win)
         win.loadURL(winURL)
 
         protocol.interceptFileProtocol('image', (req, callback) => {

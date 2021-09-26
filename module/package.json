@@ -1,0 +1,16 @@
+{
+  "name": "mess-dev",
+  "version": "1.0.0",
+  "types": "mess-dev.d.ts",
+  "description": "mess developer SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mess",
+    "sdk"
+  ],
+  "author": "zhouyu",
+  "license": "MIT"
+}

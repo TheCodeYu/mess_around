@@ -11,7 +11,6 @@ import {
 } from "electron"
 import { exec, spawn } from "child_process"
 import { Platform, throttle } from './utils'
-import robot from "robotjs"
 import ioHook from 'iohook'
 import path from 'path'
 import fs from "fs"
@@ -25,36 +24,6 @@ export default class Listener {
         this.isWin = process.platform === 'win32'
     }
 
-    getSelectedContent() {
-        return new Promise((resolve) => {
-            const lastText = clipboard.readText('clipboard')
-            // todo 缓存文件
-            clipboard.clear()
-
-            // 复制选中文案
-            if (Platform.macOS()) {
-                robot.keyTap('c', 'command')
-            } else {
-                robot.keyTap('c', 'control')
-            }
-
-            setTimeout(() => {
-                // 延时一定时间才能从剪切板内读取到内容
-                const text = clipboard.readText('clipboard') || ''
-                const fileUrl = clipboard.read('public.file-url')
-                if (this.isWin) {
-                    // todo https://github.com/njzydark/Aragorn/blob/afe4a60972b4255dd417480ca6aca2af1fd8e637/packages/aragorn-app-main/src/uploaderManager.ts#L88
-                }
-                // 如果之前是文案，则回填
-                clipboard.writeText(lastText)
-
-                resolve({
-                    text,
-                    fileUrl
-                })
-            }, 300)
-        })
-    }
     registerShortCut(mainWindow) {
         const config = global.opConfig.get()
         globalShortcut.unregisterAll()
@@ -131,27 +100,6 @@ export default class Listener {
         ipcMain.on('re-register', (event, arg) => {
             //this.setAutoLogin()
             this.registerShortCut(mainWindow)
-        })
-    }
-
-    superPanel(mainWindow) {
-        superPanel.init(mainWindow)
-        ipcMain.on('right-down', async () => {
-
-            const copyResult = await this.getSelectedContent()
-            let win = superPanel.getWindow()
-
-            win.webContents.send('trigger-super-panel', {
-                ...copyResult,
-                optionPlugin: this.optionPlugin.plugins,
-            })
-            const pos = this.getPos(robot.getMousePos())
-            win.setPosition(parseInt(pos.x), parseInt(pos.y))
-            win.setAlwaysOnTop(true)
-            win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
-            win.focus()
-            win.setVisibleOnAllWorkspaces(false, { visibleOnFullScreen: true })
-            win.show()
         })
     }
     windowMoveInit(win) {
