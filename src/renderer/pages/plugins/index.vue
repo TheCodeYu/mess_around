@@ -4,7 +4,7 @@
       v-if="!pluginInfo.subType"
       id="webview"
       :src="path"
-      :preload="preload"
+      preload="F:\mess_around\mess-around\static\preload.js"
     ></webview>
     <div v-else>
       <webview id="webview" :src="templatePath" :preload="preload"></webview>
@@ -18,7 +18,7 @@ import { mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {
-      preload: `File://${path.join(__static, './preload.js')}`,
+      preload: `File://${path.join(__static, "./preload.js")}`,
       webview: null,
       config: {},
     };
@@ -45,15 +45,15 @@ export default {
   methods: {
     ...mapMutations("main", ["setSubPlaceHolder", "commonUpdate"]),
   },
-   beforeDestroy() {
-     this.setSubPlaceHolder(`Hi Mess Around`);
-     this.commonUpdate({
-        searchValue: '',
-        options:[]
-      });
-    
-    const webview = document.querySelector('webview');
-    webview && webview.send('onPluginOut', this.pluginInfo)
+  beforeDestroy() {
+    this.setSubPlaceHolder(`Hi Mess Around`);
+    this.commonUpdate({
+      searchValue: "",
+      options: [],
+    });
+
+    const webview = document.querySelector("webview");
+    webview && webview.send("onPluginOut", this.pluginInfo);
   },
   computed: {
     ...mapState("main", ["searchValue", "devPlugins", "pluginInfo"]),
@@ -65,10 +65,10 @@ export default {
       ).features;
     },
     path() {
-        // this.$nextTick(() => {
-        //   this.webview && this.webview.send("onPluginEnter", this.pluginInfo);
-        // });
-      return `File://D:\\zhouyu\\Git\\mess_around\\plugin-demo\\index.html`;
+      // this.$nextTick(() => {
+      //   this.webview && this.webview.send("onPluginEnter", this.pluginInfo);
+      // });
+      return `File://${this.pluginInfo.sourceFile}`;
     },
     templatePath() {
       return `File://${path.join(__static, "./plugins/tpl/index.html")}?code=${
