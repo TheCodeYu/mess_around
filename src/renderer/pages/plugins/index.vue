@@ -4,7 +4,7 @@
       v-if="!pluginInfo.subType"
       id="webview"
       :src="path"
-      preload="F:\mess_around\mess-around\static\preload.js"
+      :preload="preload"
     ></webview>
     <div v-else>
       <webview id="webview" :src="templatePath" :preload="preload"></webview>

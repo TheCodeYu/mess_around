@@ -16,8 +16,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "npm run lint:fix",
     "rebuild": "node_modules/.bin/electron-rebuild.cmd",
-    "rebuild_win": "npm rebuild --runtime=electron --target=12.0.0 --disturl=https://atom.io/download/atom-shell --abi=87",
-    "rebuild_linux": "npm rebuild --runtime=electron --target=12.0.0 --disturl=https://atom.io/download/atom-shell --abi=87"
+    "rebuild_win": "npm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85",
+    "rebuild_linux": "npm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
   },
   "build": {
     "asar": true,
@@ -107,7 +107,7 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^12.0.0",
+    "electron": "^11.4.10",
     "electron-builder": "22.10.5",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
@@ -137,16 +137,16 @@
   },
   "iohook": {
     "targets": [
-      "electron-87",
+      "electron-85",
       "node-83"
     ],
     "platforms": [
-      "win32",
-      "darwin"
+      "win32"
     ],
     "arches": [
       "x64",
       "ia32"
     ]
-  }
+  },
+  "__npminstall_done": false
 }

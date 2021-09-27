@@ -3,7 +3,7 @@ import { Platform } from './common/utils'
 import { autoUpdate } from './common/autoUpdate'
 import Strore from 'electron-store'
 import init from './common/common'
-import {Config} from '../resource/config'
+import { Config } from '../resource/config'
 import createTray from './common/tray'
 
 Strore.initRenderer()
