@@ -2,7 +2,7 @@ import { Platform } from "./utils"
 import os from 'os'
 import { app, dialog, Menu, shell, Tray } from "electron"
 import path from "path"
-import { Event, Config } from '../../resource/config'
+import { Event, Config } from './common'
 export default function createTray(window) {
 
     return new Promise((resolve, reject) => {

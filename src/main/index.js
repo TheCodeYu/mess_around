@@ -2,10 +2,9 @@ import { app, BrowserWindow, globalShortcut } from 'electron'
 import { Platform } from './common/utils'
 import { autoUpdate } from './common/autoUpdate'
 import Strore from 'electron-store'
-import init from './common/common'
-import { Config } from '../resource/config'
+import { Config } from '../main/common/common'
 import createTray from './common/tray'
-
+import Listener from './common/listener'
 Strore.initRenderer()
 
 const { main } = require("./browsers")()
@@ -15,6 +14,8 @@ if (Platform.production()) {
 }
 
 app.allowRendererProcessReuse = false
+
+const listener = new Listener()
 
 class Application {
 
@@ -35,7 +36,9 @@ class Application {
 
   createWindow() {
     main.init()
-    init(main.getWindow())
+    listener.registerShortCut(main.getWindow())
+    listener.init(main.getWindow())
+
   }
 
 

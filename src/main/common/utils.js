@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { Config } from '../../resource/config'
+import { Config } from './common'
 export const Platform = {
     linux: function () {
         return process.platform === 'linux'

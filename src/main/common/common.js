@@ -1,24 +1,24 @@
-import { app } from 'electron'
-import './config'
-import Listener from './listener'
+import pkg from '../../../package.json'
 
-export default function init(mainWindow) {
-    const listener = new Listener()
-
-    //[todo] 注册快捷键
-    listener.registerShortCut(mainWindow);
-    listener.init(mainWindow);
-
-    mainWindow.once("ready-to-show", () => {
-        // 非隐藏式启动需要显示主窗口
-        if (!app.getLoginItemSettings().wasOpenedAsHidden) {
-            mainWindow.show();
-        }
-    });
-
-    // 打包后，失焦隐藏
-    mainWindow.on('blur', () => {
-        app.isPackaged && mainWindow.hide();
-    });
-
+/**
+ * 自定义的事件监听名称
+ */
+export const Event = {
+    changeWindowSize: 'changeWindowSize',//修改窗口尺寸
+    windowMove: 'window-move',//移动窗体
+    traySetting: 'tray-setting',//托盘设置
+}
+/**
+ * 全局配置信息
+ * 如外部一些开放平台API
+ */
+export const Config = {
+    appInfo: {
+        name: pkg.name,
+        version: pkg.version,
+        author: pkg.author,
+        description: pkg.description,
+        license: pkg.license,
+        appid: pkg.build.appId
+    }
 }

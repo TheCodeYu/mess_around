@@ -116,7 +116,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import { clipboard, ipcRenderer, remote } from "electron";
 import { getWindowHeight, debounce } from "./assets/common/utils";
 import { Platform } from "../main/common/utils";
-import { Event } from "../resource/config";
+import { Event } from "../main/common/common";
 import { MAIN_MENU } from "../renderer/assets/common/constant";
 const opConfig = remote.getGlobal("opConfig");
 const { Menu } = remote;

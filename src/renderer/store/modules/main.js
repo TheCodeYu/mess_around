@@ -11,7 +11,7 @@ import { MAIN_MENU } from '../../assets/common/constant'
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
-import { Event } from '../../../resource/config'
+import { Event } from '../../../main/common/common'
 const state = {
   selected: null,
   options: [],

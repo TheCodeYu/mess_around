@@ -14,7 +14,8 @@ import { Platform, throttle } from './utils'
 import ioHook from 'iohook'
 import path from 'path'
 import fs from "fs"
-import {Event} from '../../resource/config'
+import { Event } from './common'
+import './config'
 const browsers = require("../browsers")()
 const { picker, separator, superPanel } = browsers
 export default class Listener {
