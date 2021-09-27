@@ -58,6 +58,25 @@ const actions = {
       })
     }, 50)
   },
+  reloadDevPlugin({ commit }, payload) {
+    const config = JSON.parse(fs.readFileSync(path.join(payload.sourceFile, '../plugin.json'), 'utf-8'));
+    const pluginConfig = {
+      ...config,
+      sourceFile: path.join(payload.sourceFile, `../${config.main}`)
+    };
+    const devPlugins = [...state.devPlugins];
+    commit('commonUpdate', {
+      devPlugins: devPlugins.map((plugin) => {
+        if (plugin.name === payload.name) {
+          return {
+            ...plugin,
+            ...pluginConfig
+          };
+        }
+        return plugin;
+      })
+    });
+  },
   async onSearch({ commit }, payload) {
     console.log(1111)
     // if (state.selected && state.selected.key !== "plugin-container") {

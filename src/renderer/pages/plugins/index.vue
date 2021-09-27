@@ -70,6 +70,7 @@ export default {
       // });
       return `File://${this.pluginInfo.sourceFile}`;
     },
+    ///文档插件
     templatePath() {
       return `File://${path.join(__static, "./plugins/tpl/index.html")}?code=${
         this.pluginInfo.detail.code
