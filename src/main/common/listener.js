@@ -17,7 +17,7 @@ import fs from "fs"
 import { Event } from './common'
 import './config'
 const browsers = require("../browsers")()
-const { picker, separator, superPanel } = browsers
+const {separator } = browsers
 export default class Listener {
 
     constructor() {
@@ -70,24 +70,30 @@ export default class Listener {
         //this.colorPicker()
         //this.initPlugin()
         //this.lockScreen()
-        //this.separate()
+        this.separate()
         //this.initCapture()
         //this.initTouchBar(mainWindow)
         //this.superPanel(mainWindow)
         //this.reRegisterShortCut(mainWindow)
         this.changeSize(mainWindow)
         //this.msgTrigger(mainWindow)
-        this.windowMoveInit(mainWindow)
+        this.windowMoveInit(mainWindow,Event.windowMove)
     }
 
     separate() {
-        // 窗口分离
-        ipcMain.on('new-window', (event, arg) => {
+        // 插件分离窗口
+        ipcMain.on(Event.newWindow, (event, arg) => {
             const opts = {
                 ...arg,
-                searchType: 'subWindow',
+                separate: true,
             }
             separator.init(JSON.stringify(opts))
+            ///单独封装成API
+            // separator.getWindow().on("closed", () => {
+            //     ipcMain.removeAllListeners(`move-${arg.name}`)
+                
+            // })
+            // this.windowMoveInit(separator.getWindow(),`move-${arg.name}`)
         })
     }
 
@@ -103,9 +109,9 @@ export default class Listener {
             this.registerShortCut(mainWindow)
         })
     }
-    windowMoveInit(win) {
+    windowMoveInit(win,type) {
         let hasInit = false
-        ipcMain.on(Event.windowMove, () => {
+        ipcMain.on(type, () => {
             let bounds = win.getBounds()
             if (!hasInit) {
                 hasInit = true

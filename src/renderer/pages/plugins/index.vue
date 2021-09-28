@@ -1,14 +1,14 @@
 <template>
   <div>
-    <webview
-      v-if="!pluginInfo.subType"
+    <webview v-if="query.type !== 'system'"
       id="webview"
       :src="path"
       :preload="preload"
-    ></webview>
-    <div v-else>
-      <webview id="webview" :src="templatePath" :preload="preload"></webview>
-    </div>
+    />
+    <webview v-else
+      id="webview"
+      :src="systemPath" 
+      :preload="preload"/>
   </div>
 </template>
 
@@ -19,12 +19,13 @@ export default {
   data() {
     return {
       preload: `File://${path.join(__static, "./preload.js")}`,
+      query: this.$route.query,
       webview: null,
       config: {},
     };
   },
   mounted() {
-    console.log(this.path);
+    console.log(this.query);
     console.log(this.preload);
     this.webview = document.querySelector("webview");
 
@@ -71,10 +72,8 @@ export default {
       return `File://${this.pluginInfo.sourceFile}`;
     },
     ///文档插件
-    templatePath() {
-      return `File://${path.join(__static, "./plugins/tpl/index.html")}?code=${
-        this.pluginInfo.detail.code
-      }&targetFile=${encodeURIComponent(
+    systemPath() {
+      return `File://${path.join(__static, "./plugins/tpl/index.html")}?code=&targetFile=${encodeURIComponent(
         this.pluginInfo.sourceFile
       )}&preloadPath=${this.pluginInfo.preload}`;
     },

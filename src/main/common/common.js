@@ -7,6 +7,7 @@ export const Event = {
     changeWindowSize: 'changeWindowSize',//修改窗口尺寸
     windowMove: 'window-move',//移动窗体
     traySetting: 'tray-setting',//托盘设置
+    newWindow:'new-window'//新建窗口
 }
 /**
  * 全局配置信息

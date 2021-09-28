@@ -23,6 +23,7 @@ module.exports = () => {
             width: 800,
             frame: false,
             title: '摸鱼神器',
+            show: false,
             icon: 'build/icons/icon.ico',
             webPreferences: {
                 webSecurity: false,

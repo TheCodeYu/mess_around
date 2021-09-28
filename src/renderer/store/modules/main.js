@@ -85,13 +85,13 @@ const actions = {
     // }
     const value = payload.value;
     // 在插件界面不触发其他功能
-    if (
-      (state.selected && state.selected.key === "plugin-container") ||
-      payload.searchType === "subWindow"
-    ) {
-      commit("commonUpdate", { searchValue: value });
-      return;
-    }
+    // if (
+    //   (state.selected && state.selected.key === "plugin-container") ||
+    //   payload.searchType === "subWindow"
+    // ) {
+    //   commit("commonUpdate", { searchValue: value });
+    //   return;
+    // }
     const fileUrl =
       payload.filePath ||
       clipboard.read("public.file-url").replace("file://", "");
@@ -261,7 +261,10 @@ const actions = {
       selected: {
         key: "plugin-container",
         name: cmd.label ? cmd.label : cmd,
-        icon: "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`),
+        icon: plugin.sourceFile
+        ? "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
+        : plugin.logo 
+        
       },
       searchValue: "",
       showMain: true,
@@ -269,7 +272,7 @@ const actions = {
     ipcRenderer.send("changeWindowSize", {
       height: getWindowHeight(),
     });
-    if (plugin.type === "system") {
+    if (plugin.type === "system" && !plugin.isPlugin) {
       systemMethod[plugin.tag][feature.code]();
       commit("commonUpdate", {
         selected: null,

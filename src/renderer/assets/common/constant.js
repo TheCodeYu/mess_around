@@ -5,16 +5,19 @@ const PRE_ITEM_HEIGHT = 60;
 
 const SYSTEM_PLUGINS = [
   {
-    pluginName: 'rubick 帮助文档',
+    pluginName: '帮助文档',
+    name:'document',
     logo: require('../imgs/help.png'),
+    isPlugin: true,
+    preload:'preload.js',
     features: [
       {
         code: 'help',
-        explain: 'rubick 帮助文档',
+        explain: 'Mess  帮助文档',
         cmds: ['Help', '帮助']
       }
     ],
-    tag: 'rubick-help'
+    tag: 'Mess-help'
   },
 ]
 

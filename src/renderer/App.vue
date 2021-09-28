@@ -1,7 +1,7 @@
 <template>
   <div @mousedown="drag">
-    <a-layout id="components-layout">
-      <div v-if="!searchType" class="mess-select">
+    <a-layout :id="pluginInfo.separate ? 'separate':'components-layout'">
+      <div v-if="!pluginInfo.separate" class="mess-select">
         <div class="tag-container" v-if="selected">
           <a-tag
             :key="selected.key"
@@ -73,37 +73,6 @@
               <a-tag v-show="item.type === 'system'">系统</a-tag>
             </a-list-item>
           </a-list>
-        </div>
-      </div>
-      <div class="mess-select-subMenu" v-else>
-        <div>
-          <img
-            class="icon-tool-sub"
-            v-if="pluginInfo.icon"
-            :src="pluginInfo.icon"
-          />
-          <a-input
-            :placeholder="subPlaceHolder"
-            class="sub-input"
-            @change="
-              (e) =>
-                search({
-                  value: e.target.value,
-                  searchType: pluginInfo.searchType,
-                })
-            "
-            :value="searchValue"
-            @keypress.enter="
-              (e) => targetSearch({ value: e.target.value, type: 'enter' })
-            "
-            @keypress.space="
-              (e) => targetSearch({ value: e.target.value, type: 'space' })
-            "
-          ></a-input>
-        </div>
-        <div class="icon-container">
-          <a-icon class="icon" type="info-circle" />
-          <a-icon class="icon" @click="goMenu('separate')" type="setting" />
         </div>
       </div>
       <router-view></router-view>
@@ -206,15 +175,15 @@ export default {
       this.searchFn(v);
     },
     newWindow() {
-      ipcRenderer.send("new-window", {
+      ipcRenderer.send(Event.newWindow, {
         ...this.pluginInfo,
       });
       this.closeTag();
     },
-    goMenu(type) {
+    goMenu() {
       if (
         (this.selected && this.selected.key === "plugin-container") ||
-        type === "separate"
+        this.pluginInfo.separate
       ) {
         const pluginMenu = [
           {
@@ -238,7 +207,7 @@ export default {
             label: "隐藏插件",
           },
         ];
-        if (type !== "separate") {
+        if (!this.pluginInfo.separate) {
           pluginMenu.unshift({ label: "分离窗口", click: this.newWindow });
         }
         let menu = Menu.buildFromTemplate(pluginMenu);
@@ -309,14 +278,8 @@ export default {
     ]),
     showOptions() {
       //显示搜索选项，没有MainUI时
-      if (this.options.length && !this.showMain) {
-        return true;
-      }
-      return false;
-    },
-    searchType() {
-      return this.pluginInfo.searchType ? "subWindow" : "";
-    },
+      return this.options.length && !this.showMain
+    }
   },
 };
 </script>
@@ -325,6 +288,13 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+#separate {
+  height: 100vh;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    width: 0;
+  }
 }
 #components-layout {
   padding-top: 60px;
