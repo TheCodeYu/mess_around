@@ -37,7 +37,13 @@ const sysFile = {
                 return hasOption
             })
         })
-        store.set('user-plugins', plugins)
+        const target = []
+        plugins.forEach((item) => {
+            if (item.type !== 'system') {
+                target.push(item)
+            }
+        })
+        store.set('user-plugins', target)
     },
     getUserPlugins() {
         try {
@@ -71,13 +77,12 @@ function mergePlugins(plugins) {
             return {
                 ...plugin,
                 status: true,
-                sourceFile: '',
                 type: 'system'
             }
         })
     ]
     const target = []
-
+    //去重
     result.forEach((item) => {
         let targetIndex = -1
         target.forEach((tg, j) => {

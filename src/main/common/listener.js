@@ -17,7 +17,7 @@ import fs from "fs"
 import { Event } from './common'
 import './config'
 const browsers = require("../browsers")()
-const {separator } = browsers
+const { separator, helpInfo } = browsers
 export default class Listener {
 
     constructor() {
@@ -68,7 +68,7 @@ export default class Listener {
         //开始初始化一系列基础功能
         //this.setAutoLogin()
         //this.colorPicker()
-        //this.initPlugin()
+        this.initPlugin(mainWindow)
         //this.lockScreen()
         this.separate()
         //this.initCapture()
@@ -77,7 +77,20 @@ export default class Listener {
         //this.reRegisterShortCut(mainWindow)
         this.changeSize(mainWindow)
         //this.msgTrigger(mainWindow)
-        this.windowMoveInit(mainWindow,Event.windowMove)
+        this.windowMoveInit(mainWindow, Event.windowMove)
+    }
+
+    initPlugin(mainWindow) {
+        ipcMain.on(Event.newHelpInfo, (e, args) => {
+            this.optionPlugin = args;
+            helpInfo.init(mainWindow)
+            helpInfo.getWindow().once('ready-to-show', () => {
+                helpInfo.getWindow().webContents.send(Event.helpReadyShow, args);
+                helpInfo.getWindow().show()
+
+            })
+
+        });
     }
 
     separate() {
@@ -91,7 +104,7 @@ export default class Listener {
             ///单独封装成API
             // separator.getWindow().on("closed", () => {
             //     ipcMain.removeAllListeners(`move-${arg.name}`)
-                
+
             // })
             // this.windowMoveInit(separator.getWindow(),`move-${arg.name}`)
         })
@@ -109,7 +122,7 @@ export default class Listener {
             this.registerShortCut(mainWindow)
         })
     }
-    windowMoveInit(win,type) {
+    windowMoveInit(win, type) {
         let hasInit = false
         ipcMain.on(type, () => {
             let bounds = win.getBounds()

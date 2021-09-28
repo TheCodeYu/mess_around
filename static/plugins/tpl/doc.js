@@ -1,31 +1,54 @@
-
+const path = require('path')
+const marked = require("marked")
+const fs = require("fs")
+const { clipboard } = require("electron");
 const rendererMD = new marked.Renderer();
-{/* <div class="menu">
-        <div @click="active = index" :class="active === index ? 'active item' : 'item'" v-for="(item, index) in menu">
-          <div class="title">{{item.t}}</div>
-          <div class="desc">{{item.d}}</div>
-        </div>
-      </div>
-      <iframe class="frame"  /> */}
 export default {
   template: `
-    <div class="doc-container" v-html="readme">
+    <div class="doc-container">
+      <div class="menu">
       
+        <div @click="active = index" :class="active === index ? 'active item' : 'item'" v-for="(item, index) in menu">
+          <img class="icon" width="40" height="40" :src="icon(item)" />
+          <div>
+            <div class="title">{{item.pluginName}}</div>
+            <div class="desc">{{item.description}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-container" v-html="readme"></div>
+     
     </div>
   `,
   data() {
     return {
-      menu: readmeStr
+      query: this.$route.query,
+      menu: this.$route.query.plugins,
+      active: 0,
     }
   },
   mounted() {
-    
-    
+    const aNodes = document.querySelectorAll('a')
+    console.log(aNodes)
+    for (let i = 0; i < aNodes.length; i++) {
+      // 遍历绑定监听
+      aNodes[i].title = aNodes[i].href
+      aNodes[i].onclick = clipboard.writeText(aNodes[i].href);
+      aNodes[i].href = 'javascript:void(0);'
+
+    }
+
+  },
+
+  methods: {
+    icon(plugin) {
+      return plugin.img
+        ? plugin.img : "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
+
+    },
   },
   computed: {
-    
     readme() {
-      let self = this
       marked.setOptions({
         renderer: rendererMD,
         gfm: true,
@@ -35,14 +58,14 @@ export default {
         sanitize: false,
         smartLists: true,
         smartypants: false,
+        silent: true
       });
-      console.log(readmeStr)
-      marked(readmeStr);
-      // try {
-      //   return marked(self.$http.get('static/plugins/tpl/README.MD'));
-      // } catch (e) {
-      //   return "暂无描述信息";
-      // }
-    }
+      try {
+        const mdFile = path.join(this.menu[this.active].sourceFile, '../README.md');
+        return marked(fs.readFileSync(mdFile, 'utf8'));
+      } catch (e) {
+        return '暂无描述信息'
+      }
+    },
   }
 }

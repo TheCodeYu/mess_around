@@ -12,6 +12,7 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 import { Event } from '../../../main/common/common'
+import systemMethod from '../../assets/common/system'
 const state = {
   selected: null,
   options: [],
@@ -184,9 +185,9 @@ const actions = {
             ...cmds.map((cmd) => ({
               name: cmd,
               value: "plugin",
-              icon: plugin.sourceFile
-                ? "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
-                : plugin.logo,
+              icon: plugin.img
+                ? plugin.img : "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
+              ,
               desc: fe.explain,
               type: plugin.type,
               click: (router) => {
@@ -261,10 +262,10 @@ const actions = {
       selected: {
         key: "plugin-container",
         name: cmd.label ? cmd.label : cmd,
-        icon: plugin.sourceFile
-        ? "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
-        : plugin.logo 
-        
+        icon: plugin.img
+          ? plugin.logo : "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
+
+
       },
       searchValue: "",
       showMain: true,
@@ -272,8 +273,9 @@ const actions = {
     ipcRenderer.send("changeWindowSize", {
       height: getWindowHeight(),
     });
-    if (plugin.type === "system" && !plugin.isPlugin) {
-      systemMethod[plugin.tag][feature.code]();
+    if (plugin.type === "system") {
+
+      systemMethod[plugin.tag][feature.code]([...state.devPlugins]);
       commit("commonUpdate", {
         selected: null,
         showMain: false,

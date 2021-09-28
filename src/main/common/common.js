@@ -7,7 +7,9 @@ export const Event = {
     changeWindowSize: 'changeWindowSize',//修改窗口尺寸
     windowMove: 'window-move',//移动窗体
     traySetting: 'tray-setting',//托盘设置
-    newWindow:'new-window'//新建窗口
+    newWindow: 'new-window',//新建窗口
+    newHelpInfo: 'new-help-info',//打开帮助窗口
+    helpReadyShow: 'help-ready-show'
 }
 /**
  * 全局配置信息
@@ -22,4 +24,8 @@ export const Config = {
         license: pkg.license,
         appid: pkg.build.appId
     }
+}
+
+export default {
+    Event
 }

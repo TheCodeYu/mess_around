@@ -6,10 +6,9 @@ const PRE_ITEM_HEIGHT = 60;
 const SYSTEM_PLUGINS = [
   {
     pluginName: '帮助文档',
-    name:'document',
-    logo: require('../imgs/help.png'),
-    isPlugin: true,
-    preload:'preload.js',
+    name: 'document',
+    img: require('../imgs/help.png'),
+    sourceFile: `${__static}/plugins/tpl/index.html`,
     features: [
       {
         code: 'help',
@@ -17,7 +16,7 @@ const SYSTEM_PLUGINS = [
         cmds: ['Help', '帮助']
       }
     ],
-    tag: 'Mess-help'
+    tag: 'mess-help'
   },
 ]
 
