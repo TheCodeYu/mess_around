@@ -15,6 +15,7 @@
         </div>
         <a-input
           id="search"
+          spellcheck="false"
           :placeholder="subPlaceHolder"
           @mousedown.stop="dragWhenInput"
           class="main-input"

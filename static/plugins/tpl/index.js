@@ -21,20 +21,9 @@ const router = new VueRouter({
   routes
 })
 
-window.history
-router.beforeEach((to, form, next) => {
-  console.log(to, form)
-  if (to.matched.length > 0) {
-    next()
-  } else {
-
-  }
-
-})
 new Vue({
   el: '#app',
   data: {
-
   },
   mounted() {
     ipcRenderer.on('help-ready-show', (e, args) => {
