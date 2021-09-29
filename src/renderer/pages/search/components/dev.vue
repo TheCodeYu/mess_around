@@ -8,6 +8,7 @@
       >
         <a-menu-item
           @click="currentSelect = [index]"
+          @dblclick="openPlugin({cmd:plugin.pluginName,plugin:plugin,router:$router})"
           v-for="(plugin, index) in devPlugin"
           :key="index"
         >
@@ -102,7 +103,7 @@ export default {
   },
   methods: {
     ...mapMutations("main", ["deleteDevPlugin", "devPluginStatusChange"]),
-    ...mapActions("main", ["releasePlugin", "reloadDevPlugin"]),
+    ...mapActions("main", ["releasePlugin", "reloadDevPlugin","openPlugin"]),
     release(plugin) {
       if (!plugin.author) return this.$message.error("请填写作者！");
       if (!plugin.status) return this.$message.error("请开启插件！");
