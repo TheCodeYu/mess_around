@@ -44,24 +44,24 @@ export default class Listener {
             mainWindow.show()
         })
 
-        // globalShortcut.register(config.perf.shortCut.separate, () => {
-        //     mainWindow.webContents.send('new-window')
-        // })
+        globalShortcut.register(config.perf.shortCut.separate, () => {
+            mainWindow.webContents.send('new-window')
+        })
 
-        // globalShortcut.register(config.perf.shortCut.quit, () => {
-        //     mainWindow.webContents.send('init-mess')
-        //     mainWindow.show()
-        // })
+        globalShortcut.register(config.perf.shortCut.quit, () => {
+            mainWindow.webContents.send('init-mess')
+            mainWindow.show()
+        })
 
-        // //注册全局自定义快捷键
-        // config.global.forEach(sc => {
-        //     if (!sc.key || !sc.value) return
+        //注册全局自定义快捷键
+        config.global.forEach(sc => {
+            if (!sc.key || !sc.value) return
 
-        //     globalShortcut.register(sc.key, () => {
-        //         mainWindow.webContents.send('global-short-key', sc.value)
-        //     })
+            globalShortcut.register(sc.key, () => {
+                mainWindow.webContents.send('global-short-key', sc.value)
+            })
 
-        // })
+        })
     }
 
     init(mainWindow) {

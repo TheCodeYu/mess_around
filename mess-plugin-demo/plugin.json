@@ -16,5 +16,27 @@
       ]
     }
   ],
+  "settings":[
+    {
+      "title":"demo设置1",
+      "items":[
+        {
+          "name":"设置项目1",
+          "type":"switch",
+          "value":true
+        }
+      ]
+    },
+    {
+      "title":"demo设置2",
+      "items":[
+        {
+          "name":"设置项目1",
+          "type":"switch",
+          "value":false
+        }
+      ]
+    }
+  ],
   "preload": "preload.js"
 }

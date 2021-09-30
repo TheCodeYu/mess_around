@@ -21,6 +21,7 @@ module.exports = () => {
             useContentSize: true,
             resizable: true,
             width: 800,
+            minWidth: 800,
             frame: false,
             title: '摸鱼神器',
             show: false,

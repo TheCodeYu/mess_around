@@ -23,13 +23,6 @@ let defaultConfig = {
                 search: true
             }
         },
-        superPanel: {
-            baiduAPI: {
-                key: '',
-                appid: ''
-            },
-            mouseDownTime: 500
-        },
         global: []
     },
     Windows_NT: {
@@ -48,13 +41,6 @@ let defaultConfig = {
                 search: true
             }
         },
-        superPanel: {
-            baiduAPI: {
-                key: '',
-                appid: ''
-            },
-            mouseDownTime: 500
-        },
         global: []
     },
     Linux: {
@@ -72,13 +58,6 @@ let defaultConfig = {
             local: {
                 search: true
             }
-        },
-        superPanel: {
-            baiduAPI: {
-                key: '',
-                appid: ''
-            },
-            mouseDownTime: 500
         },
         global: []
     }

@@ -129,12 +129,6 @@ const actions = {
         id: uuidv4(),
         type: "dev",
         icon: "image://" + path.join(fileUrl, `../${config.logo}`),
-        subType: (() => {
-          if (config.main) {
-            return "";
-          }
-          return "template";
-        })(),
       };
       commit("commonUpdate", {
         selected: {

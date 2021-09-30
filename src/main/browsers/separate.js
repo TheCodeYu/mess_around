@@ -16,6 +16,7 @@ module.exports = () => {
       height: 600,
       useContentSize: true,
       width: 800,
+      minWidth: 800,
       frame: false,
       show: false,
       webPreferences: {

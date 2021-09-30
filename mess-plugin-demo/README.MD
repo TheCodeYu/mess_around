@@ -19,7 +19,7 @@ git clone
 cd	
 ```
 
-复制 `plugin.json` 文件，在 `rubick` 主窗口执行 `ctrl/command + v` 即可唤起安装插件的功能，选择`新建rubick插件`，进入插件主界面，
+复制 `plugin.json` 文件，在 `mess` 主窗口执行 `ctrl/command + v` 即可唤起安装插件的功能，选择`新建mess插件`，进入插件主界面，
 开启插件后，在插件主窗口即可通过命令打开插件：
 
 ## 开发一个最基础的插件

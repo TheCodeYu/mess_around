@@ -15,6 +15,7 @@
 <script>
 import path from "path";
 import { mapMutations, mapState } from "vuex";
+import {Event} from '../../../main/common/common'
 export default {
   data() {
     return {
@@ -25,23 +26,23 @@ export default {
     };
   },
   mounted() {
-    console.log(this.query);
-    console.log(this.preload);
-    this.webview = document.querySelector("webview");
+    this.webview = document.querySelector("webview")
 
     this.webview.addEventListener("dom-ready", () => {
-      this.webview.send("onPluginReady", this.pluginInfo);
-      this.webview.send("onPluginEnter", this.pluginInfo);
+      this.webview.send(Event.lifetime.pluginEnter, this.pluginInfo);
       this.commonUpdate({
         pluginLoading: true,
       });
     });
+
     this.webview.addEventListener("did-finish-load", () => {
       this.commonUpdate({
         pluginLoading: false,
       });
+      this.webview.send(Event.lifetime.pluginLoadingEnd, this.pluginInfo);
     });
-    this.setSubPlaceHolder(`Hi ${this.pluginInfo.name}`);
+
+    this.setSubPlaceHolder(`Hi ${this.pluginInfo.pluginName}`);
   },
   methods: {
     ...mapMutations("main", ["setSubPlaceHolder", "commonUpdate"]),
@@ -54,7 +55,7 @@ export default {
     });
 
     const webview = document.querySelector("webview");
-    webview && webview.send("onPluginOut", this.pluginInfo);
+    webview && webview.send(Event.lifetime.PluginExit);
   },
   computed: {
     ...mapState("main", ["searchValue", "devPlugins", "pluginInfo"]),
