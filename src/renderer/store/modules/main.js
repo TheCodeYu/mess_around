@@ -43,6 +43,28 @@ const mutations = {
   setSubPlaceHolder(state, payload) {
     state.subPlaceHolder = payload;
   },
+  deleteDevPlugin(state, payload) {
+    state.devPlugins = state.devPlugins.filter(
+      (plugin) => plugin.name !== payload.name
+    );
+    sysFile.savePlugins(state.devPlugins);
+  },
+  deleteProdPlugin(state, payload) {
+    state.devPlugins = state.devPlugins.filter(
+      (plugin) => plugin.id !== payload.id
+    );
+    sysFile.savePlugins(state.devPlugins);
+    // todo 删除 static 目录下的对应插件
+  },
+  devPluginStatusChange(state, payload) {
+    state.devPlugins.forEach((plugin) => {
+      if (plugin.name === payload.name) {
+        plugin.status = !plugin.status;
+      }
+    });
+    state.devPlugins = [...state.devPlugins];
+    sysFile.savePlugins(state.devPlugins);
+  },
 }
 
 const actions = {
@@ -245,6 +267,7 @@ const actions = {
     });
   },
   openPlugin({ commit }, { cmd, plugin, feature, router, payload }) {
+
     if (plugin.type === "app") {
       execSync(plugin.action);
       commit("commonUpdate", {

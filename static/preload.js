@@ -63,4 +63,3 @@ require(path.join(filePath, '../', preloadPath));
 
 window.exports && ipcRenderer.sendToHost('templateConfig', { config: JSON.parse(JSON.stringify(window.exports)) });
 window.ipcRenderer = ipcRenderer;
-console.log(preloadPath)

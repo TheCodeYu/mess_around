@@ -8,9 +8,10 @@
       >
         <a-menu-item
           @click="currentSelect = [index]"
-          @dblclick="openPlugin({cmd:plugin.pluginName,plugin:plugin,router:$router})"
+          @dblclick="plugin.status?openPlugin({cmd:plugin.pluginName,plugin:plugin,router:$router}):$message.info('请先开启插件')"
           v-for="(plugin, index) in devPlugin"
           :key="index"
+          
         >
           <div class="menu-item">
             <img width="40" height="40" :src="plugin.icon" />
@@ -52,7 +53,7 @@
                 >
               </div>
               <div class="desc-info">
-                如果你修改了plugin.json文件需要重新加载以应用最近版本
+                如果你修改了plugin.json文件请重新加载
               </div>
             </div>
             <div class="desc-item">
@@ -63,17 +64,17 @@
                 >
               </div>
               <div class="desc-info">
-                发布后用户可以通过插件中心下载，且享受最新的更新
+                发布后用户即可通过插件中心进行下载
               </div>
             </div>
             <div class="desc-item">
               <div class="desc-title">
-                <p>删除</p>
+                <p>移除</p>
                 <a-button type="link" @click="deleteDevPlugin(pluginDetail)"
-                  >删除</a-button
+                  >移除</a-button
                 >
               </div>
-              <div class="desc-info">删除这个插件不可以恢复</div>
+              <div class="desc-info">移除这个插件,但不会删除文件</div>
             </div>
           </a-tab-pane>
           <a-tab-pane key="2" tab="详情介绍">

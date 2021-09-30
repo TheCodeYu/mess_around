@@ -1,7 +1,7 @@
 const path = require('path')
 const marked = require("marked")
 const fs = require("fs")
-const { clipboard } = require("electron");
+const { clipboard,shell } = require("electron");
 const rendererMD = new marked.Renderer();
 export default {
   template: `
@@ -86,6 +86,9 @@ export default {
           let img = document.getElementsByTagName('img')
           for (let i = 0; i < img.length; i++) {
             if (img[i].className === 'icon') continue      
+            if(img[i].src.toLocaleLowerCase().startsWith('http://') || img[i].src.toLocaleLowerCase().startsWith('https://')){
+              continue
+            }
             if(img[i].title===''){
               img[i].title = path.join(this.menu[this.active].sourceFile, `../${img[i].attributes['src'].value}`)           
             }
@@ -95,8 +98,9 @@ export default {
             // 遍历绑定监听
             aNodes[i].title = aNodes[i].title ? aNodes[i].title : aNodes[i].href
             aNodes[i].addEventListener('click', (e, argv) => {
-              clipboard.writeText(aNodes[i].title)
-              this.toast('已复制到剪贴板')
+              //clipboard.writeText(aNodes[i].title)
+              shell.openExternal(aNodes[i].title)
+              //this.toast('已复制到剪贴板')
             })
             aNodes[i].href = "javascript:void(0);"
 
