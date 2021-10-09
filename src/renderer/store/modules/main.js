@@ -138,7 +138,7 @@ const actions = {
         searchValue: "",
         options: [
           {
-            name: "新建rubick开发插件",
+            name: "新建Mess开发插件",
             value: "new-plugin",
             icon:
               "https://static.91jkys.com/activity/img/b37ff555c748489f88f3adac15b76f18.png",
@@ -149,11 +149,11 @@ const actions = {
                 devPlugins: [pluginConfig, ...state.devPlugins],
                 selected: {
                   key: "plugin",
-                  name: "新建rubick开发插件",
+                  name: "新建Mess开发插件",
                 },
                 current: ["dev"],
               });
-              ipcRenderer.send("changeWindowSize-mess", {
+              ipcRenderer.send(Event.changeWindowSize, {
                 height: getWindowHeight(),
               });
               router.push("/home/dev");
@@ -172,16 +172,16 @@ const actions = {
                 selected: null,
                 options: [],
               });
-              ipcRenderer.send("changeWindowSize-mess", {
+              ipcRenderer.send(Event.changeWindowSize, {
                 height: getWindowHeight([]),
               });
-              remote.Notification("Rubick 通知", { body: "复制成功" });
+              remote.Notification("Mess 通知", { body: "复制成功" });
             },
           },
         ],
       });
       // 调整窗口大小
-      ipcRenderer.send("changeWindowSize-mess", {
+      ipcRenderer.send(Event.changeWindowSize, {
         height: getWindowHeight(state.options),
       });
       return;
@@ -256,7 +256,7 @@ const actions = {
     commit("commonUpdate", {
       options,
     });
-    ipcRenderer.send("changeWindowSize", {
+    ipcRenderer.send(Event.changeWindowSize, {
       height: getWindowHeight(state.options),
     });
   },
@@ -270,7 +270,7 @@ const actions = {
         options: [],
         searchValue: "",
       });
-      ipcRenderer.send("changeWindowSize", {
+      ipcRenderer.send(Event.changeWindowSize, {
         height: getWindowHeight([]),
       });
       return;
@@ -287,7 +287,7 @@ const actions = {
       searchValue: "",
       showMain: true,
     });
-    ipcRenderer.send("changeWindowSize", {
+    ipcRenderer.send(Event.changeWindowSize, {
       height: getWindowHeight(),
     });
     if (plugin.type === "system") {
@@ -298,7 +298,7 @@ const actions = {
         showMain: false,
         options: [],
       });
-      ipcRenderer.send("changeWindowSize", {
+      ipcRenderer.send(Event.changeWindowSize, {
         height: getWindowHeight([]),
       });
       router.push({

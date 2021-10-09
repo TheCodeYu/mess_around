@@ -1,6 +1,6 @@
 <template>
   <div @mousedown="drag">
-    <a-layout :id="pluginInfo.separate ? 'separate':'components-layout'">
+    <a-layout :id="pluginInfo.separate ? 'separate' : 'components-layout'">
       <div v-if="!pluginInfo.separate" class="mess-select">
         <div class="tag-container" v-if="selected">
           <a-tag
@@ -279,8 +279,8 @@ export default {
     ]),
     showOptions() {
       //显示搜索选项，没有MainUI时
-      return this.options.length && !this.showMain
-    }
+      return this.options.length && !this.showMain;
+    },
   },
 };
 </script>
