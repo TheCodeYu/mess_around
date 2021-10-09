@@ -1,6 +1,5 @@
 
 const { BrowserWindow, protocol } = require("electron")
-const path = require('path')
 
 module.exports = () => {
 
@@ -22,7 +21,7 @@ module.exports = () => {
             resizable: true,
             width: 800,
             minWidth: 800,
-            frame: false,
+            frame: true,
             title: '摸鱼神器',
             show: false,
             icon: 'build/icons/icon.ico',

@@ -68,7 +68,7 @@ export default class Listener {
         //开始初始化一系列基础功能
         //this.setAutoLogin()
         //this.colorPicker()
-        this.initPlugin(mainWindow)
+        this.initPlugin()
         //this.lockScreen()
         this.separate()
         //this.initCapture()
@@ -80,10 +80,10 @@ export default class Listener {
         this.windowMoveInit(mainWindow, Event.windowMove)
     }
 
-    initPlugin(mainWindow) {
+    initPlugin() {
         ipcMain.on(Event.newHelpInfo, (e, args) => {
             this.optionPlugin = args;
-            helpInfo.init(mainWindow)
+            helpInfo.init()
             helpInfo.getWindow().once('ready-to-show', () => {
                 helpInfo.getWindow().webContents.send(Event.helpReadyShow, args);
                 helpInfo.getWindow().show()
@@ -101,6 +101,9 @@ export default class Listener {
                 separate: true,
             }
             separator.init(JSON.stringify(opts))
+            // ipcMain.on(Event.setTitle, (event, arg) => {
+            //     separator.setTitle(arg)         
+            // })
             ///单独封装成API
             // separator.getWindow().on("closed", () => {
             //     ipcMain.removeAllListeners(`move-${arg.name}`)
@@ -108,6 +111,7 @@ export default class Listener {
             // })
             // this.windowMoveInit(separator.getWindow(),`move-${arg.name}`)
         })
+        
     }
 
     changeSize(mainWindow) {

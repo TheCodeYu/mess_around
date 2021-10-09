@@ -10,6 +10,7 @@ const Event = {
     newWindow: 'new-window',//新建窗口
     newHelpInfo: 'new-help-info',//打开帮助窗口
     helpReadyShow: 'help-ready-show',
+    setTitle:'set-title',//设置插件窗口标题
 
     lifetime: {
         pluginStart: 'plugin-start',//'did-start-loading',

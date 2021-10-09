@@ -4,15 +4,15 @@ module.exports = () => {
 
     let win
 
-    let init = (argv) => {
+    let init = (arg) => {
         if (win === null || win === undefined) {
-            createWindow(argv);
+            createWindow(arg);
         }
 
     }
 
-    let createWindow = (argv) => {
-
+    let createWindow = (arg) => {
+        
         win = new BrowserWindow({
             frame: true,
             autoHideMenuBar: true,
@@ -20,6 +20,7 @@ module.exports = () => {
             minWidth: 800,
             height: 600,
             show: false,
+            icon: `${__static}/plugins/tpl/help.png`,
             title: '帮助文档',
             webPreferences: {
                 webSecurity: false,

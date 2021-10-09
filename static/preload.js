@@ -23,11 +23,15 @@ const { ipcRenderer } = require('electron');
 
 Object.freeze(Event, Config)
 
-window.Mess = {
+window.mess = {
 
     event: Event,
     config: Config,
     ipcRenderer: ipcRenderer,
+    setTitle(title){
+        ipcRenderer.send(Event.setTitle,title)
+        ipcRenderer.sendToHost('setSubInput', {a:1,b:'we'});
+    },
     showNotification(body, clickFeatureCode) {
         const myNotification = new Notification('Mess 通知', {
             body

@@ -43,6 +43,9 @@ export default {
     });
 
     this.setSubPlaceHolder(`Hi ${this.pluginInfo.pluginName}`);
+    this.webview.addEventListener('ipc-message', (event) => {
+      console.log(event)
+    })
   },
   methods: {
     ...mapMutations("main", ["setSubPlaceHolder", "commonUpdate"]),

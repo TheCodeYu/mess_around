@@ -1,0 +1,20 @@
+{
+  "pluginName": "mess-vue",
+  "author": "zhouyu",
+  "description": "mess vue plugin demo",
+  "main": "index.html",
+  "version": "0.0.1",
+  "logo": "logo.png",
+  "name": "mess-vue-plugin-demo",
+  "gitUrl": "",
+  "features": [
+    {
+      "code": "demo",
+      "explain": "这是一个使用VUE编写的插件",
+      "cmds":[
+        "demo"
+      ]
+    }
+  ],
+  "preload": "preload.js"
+}

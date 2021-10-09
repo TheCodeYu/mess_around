@@ -8,6 +8,9 @@
   <button id="showNotification">通知</button>
 </body>
 <script>
-
+  let i=0
+document.getElementById('showNotification').addEventListener('click', () => {
+    window.mess.setTitle(`${i++}`)
+  })
 </script>
 </html>
