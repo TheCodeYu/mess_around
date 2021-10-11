@@ -14,7 +14,9 @@ module.exports = () => {
     const winURL = process.env.NODE_ENV === 'development' ?
       'http://localhost:9080/#/plugin' : `${__dirname}/index.html`
 
-    title = JSON.parse(arg).pluginName
+    let temp = JSON.parse(arg)
+    title = temp.pluginName
+    let frame = temp.frame === undefined ? true : temp.frame
     win = new BrowserWindow({
       height: 600,
       useContentSize: true,
@@ -22,6 +24,7 @@ module.exports = () => {
       minWidth: 800,
       autoHideMenuBar: true,
       title: title,
+      frame: frame,
       icon: JSON.parse(arg).icon.substring(8),
       show: false,
       webPreferences: {
@@ -37,9 +40,12 @@ module.exports = () => {
     process.env.NODE_ENV === 'development' ? win.loadURL(winURL) : win.loadFile(winURL, {
       hash: `#/plugin`,
     })
-    //let temp = JSON.stringify(arg)
+
     win.webContents.executeJavaScript(`window.setPluginInfo(${arg})`).then(() => {
-      win.show()
+      ///消隐作用
+      setTimeout(() => {
+        win.show()
+      }, 1500)
     })
 
     win.on("closed", () => {
@@ -49,7 +55,7 @@ module.exports = () => {
   let getWindow = () => win
 
   let setTitle = (arg) => {
-    win.setTitle(`${title}-`+arg)
+    win.setTitle(`${title}-` + arg)
   }
   return {
     init: init,

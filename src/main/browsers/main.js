@@ -21,10 +21,10 @@ module.exports = () => {
             resizable: true,
             width: 800,
             minWidth: 800,
-            frame: true,
+            frame: false,
             title: '摸鱼神器',
             show: false,
-            icon: 'build/icons/icon.ico',
+            icon: `${__static}/icon.ico`,
             webPreferences: {
                 webSecurity: false,
                 enableRemoteModule: true,
